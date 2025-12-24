@@ -1,0 +1,70 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore IDE/Editor files
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# Ignore environment files
+.env
+.env.local
+.env.production
+
+# Ignore uploaded files (user content)
+uploads/*
+!uploads/.htaccess
+
+# Ignore logs
+*.log
+error_log
+access_log
+
+# Ignore database dumps
+*.sql
+*.dump
+
+# Ignore temporary files
+tmp/
+temp/
+cache/
+
+# Ignore vendor directories (if using Composer)
+vendor/
+node_modules/
+
+# Ignore OS-specific files
+._.DS_Store
+._*
+
+# Keep important directories
+!uploads/
+!tools/
+
+# Ignore sensitive configuration backups
+config/db.backup.php
+config/*.bak
+
+# Ignore development/testing files
+test_*.php
+debug_*.php
+populate_dummy_data.php
+create_admin.php
+update_schema_*.php
+run_db_update_*.php
+
+# Ignore documentation artifacts (if any)
+docs/artifacts/
+*.webp
+*.png
+*.jpg
+*.gif
+
+# Keep .htaccess files
+!.htaccess
+!*/.htaccess

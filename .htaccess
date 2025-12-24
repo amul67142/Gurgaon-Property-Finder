@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /
+
+# Protect config folder
+RewriteRule ^config/ - [F]
+
+# SEO Friendly URLs (Optional simple rewrites)
+# RewriteRule ^property/([0-9]+)$ property-details.php?id=$1 [L]
+
+# Error Documents
+ErrorDocument 404 /index.php
