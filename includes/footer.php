@@ -57,6 +57,10 @@ $isDashboard = strpos($currentScript, '/admin/') !== false || strpos($currentScr
         </div>
     </div>
 </footer>
+
+<!-- EMI Calculator Widget -->
+<?php require_once __DIR__ . '/emi-calculator-widget.php'; ?>
+
 <?php endif; ?>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
