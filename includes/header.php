@@ -106,6 +106,9 @@ $isTransparentPage = basename($_SERVER['PHP_SELF']) == 'index.php' || basename($
                 </div>
             </div>
 
+            <a href="<?php echo BASE_URL; ?>/emi-calculator.php" class="hover:text-secondary transition flex items-center gap-2">
+                <i class="fa-solid fa-calculator text-xs"></i> EMI Calculator
+            </a>
             <a href="<?php echo BASE_URL; ?>/about-us.php" class="hover:text-secondary transition">About Us</a>
             <a href="<?php echo BASE_URL; ?>/contact.php" class="hover:text-secondary transition">Contact</a>
             
@@ -186,6 +189,12 @@ $isTransparentPage = basename($_SERVER['PHP_SELF']) == 'index.php' || basename($
                     </div>
                 </div>
 
+                <a href="<?php echo BASE_URL; ?>/emi-calculator.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-slate-50 text-slate-800 font-semibold transition group">
+                    <span class="text-sm tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-xs text-secondary"></i> EMI Calculator
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-secondary transition"></i>
+                </a>
                 <a href="<?php echo BASE_URL; ?>/about-us.php" class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-slate-50 text-slate-800 font-semibold transition group">
                     <span class="text-sm tracking-tight">About Us</span>
                     <i class="fa-solid fa-chevron-right text-[10px] text-slate-300 group-hover:text-secondary transition"></i>

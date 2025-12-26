@@ -173,35 +173,6 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                     </div>
                 </div>
-
-                <!-- Amortization Schedule -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-table text-secondary"></i>
-                            Amortization Schedule (First 12 Months)
-                        </h3>
-                        <button onclick="toggleFullSchedule()" class="text-xs text-secondary hover:text-yellow-600 transition font-bold">
-                            View Full Schedule
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b-2 border-slate-200">
-                                    <th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase">Month</th>
-                                    <th class="px-4 py-3 text-right text-xs font-bold text-slate-600 uppercase">EMI</th>
-                                    <th class="px-4 py-3 text-right text-xs font-bold text-slate-600 uppercase">Principal</th>
-                                    <th class="px-4 py-3 text-right text-xs font-bold text-slate-600 uppercase">Interest</th>
-                                    <th class="px-4 py-3 text-right text-xs font-bold text-slate-600 uppercase">Balance</th>
-                                </tr>
-                            </thead>
-                            <tbody id="scheduleTable">
-                                <!-- Populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -313,9 +284,6 @@ require_once __DIR__ . '/includes/header.php';
 
         // Update Chart
         updateChart(principal, totalInterest);
-
-        // Update Amortization Schedule
-        updateSchedule(principal, monthlyRate, months, emi);
     }
 
     function updateChart(principal, interest) {
@@ -356,31 +324,6 @@ require_once __DIR__ . '/includes/header.php';
         });
     }
 
-    function updateSchedule(principal, monthlyRate, totalMonths, emi) {
-        const scheduleTable = document.getElementById('scheduleTable');
-        scheduleTable.innerHTML = '';
-
-        let balance = principal;
-        const displayMonths = Math.min(12, totalMonths); // Show first 12 months
-
-        for (let month = 1; month <= displayMonths; month++) {
-            const interestPayment = balance * monthlyRate;
-            const principalPayment = emi - interestPayment;
-            balance -= principalPayment;
-
-            const row = document.createElement('tr');
-            row.className = 'border-b border-slate-100 hover:bg-slate-50 transition';
-            row.innerHTML = `
-                <td class="px-4 py-3 text-slate-700 font-medium">${month}</td>
-                <td class="px-4 py-3 text-right text-slate-900 font-semibold">₹${Math.round(emi).toLocaleString('en-IN')}</td>
-                <td class="px-4 py-3 text-right text-blue-600">₹${Math.round(principalPayment).toLocaleString('en-IN')}</td>
-                <td class="px-4 py-3 text-right text-red-600">₹${Math.round(interestPayment).toLocaleString('en-IN')}</td>
-                <td class="px-4 py-3 text-right text-slate-900 font-bold">₹${Math.round(balance).toLocaleString('en-IN')}</td>
-            `;
-            scheduleTable.appendChild(row);
-        }
-    }
-
     function toggleManualInput() {
         const manualInputs = document.getElementById('manualInputs');
         const toggleText = document.getElementById('manualToggleText');
@@ -408,11 +351,6 @@ require_once __DIR__ . '/includes/header.php';
         } else {
             alert('Please enter all values');
         }
-    }
-
-    function toggleFullSchedule() {
-        alert('Full schedule view coming soon! This will show the complete amortization schedule for all ' + 
-              (parseInt(document.getElementById('tenure').value) * 12) + ' months.');
     }
 
     // Event Listeners
