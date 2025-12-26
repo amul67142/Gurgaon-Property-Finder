@@ -154,7 +154,7 @@ require_once __DIR__ . '/includes/header.php';
                         Payment Breakdown
                     </h3>
                     <div class="flex items-center justify-center">
-                        <canvas id="emiChart" width="300" height="300"></canvas>
+                        <canvas id="emiChart" width="200" height="200"></canvas>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-6">
                         <div class="flex items-center gap-3">
