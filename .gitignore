@@ -60,10 +60,16 @@ run_db_update_*.php
 
 # Ignore documentation artifacts (if any)
 docs/artifacts/
-*.webp
-*.png
-*.jpg
-*.gif
+
+# Ignore user-uploaded images only (keep static assets)
+uploads/**/*.webp
+uploads/**/*.png
+uploads/**/*.jpg
+uploads/**/*.gif
+assets/uploads/**/*.webp
+assets/uploads/**/*.png
+assets/uploads/**/*.jpg
+assets/uploads/**/*.gif
 
 # Keep .htaccess files
 !.htaccess
