@@ -135,4 +135,99 @@ function get_property_cover($propertyId, $pdo) {
     
     return 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'; // Fallback
 }
+
+/**
+ * Delete all images associated with a property
+ * Called before deleting a property from the database
+ */
+function deletePropertyImages($propertyId, $pdo) {
+    try {
+        $deletedFiles = [];
+        $errors = [];
+        
+        // 1. Get all gallery images from property_images table
+        $stmt = $pdo->prepare("SELECT image_path FROM property_images WHERE property_id = ?");
+        $stmt->execute([$propertyId]);
+        $galleryImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // 2. Get property-specific images (highlights, location, ad_broker)
+        $stmt = $pdo->prepare("SELECT highlights_image, location_advantages_image, ad_broker_image FROM properties WHERE id = ?");
+        $stmt->execute([$propertyId]);
+        $propertyImages = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // 3. Get floor plan images
+        $stmt = $pdo->prepare("SELECT image_path FROM property_floor_plans WHERE property_id = ?");
+        $stmt->execute([$propertyId]);
+        $floorPlanImages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // Collect all image paths
+        $allImages = array_merge(
+            $galleryImages,
+            array_filter([
+                $propertyImages['highlights_image'] ?? null,
+                $propertyImages['location_advantages_image'] ?? null,
+                $propertyImages['ad_broker_image'] ?? null
+            ]),
+            $floorPlanImages
+        );
+        
+        // Delete each file
+        foreach ($allImages as $imagePath) {
+            if (empty($imagePath)) continue;
+            
+            // Skip external URLs
+            if (strpos($imagePath, 'http') !== false) continue;
+            
+            // Construct full file path
+            $fullPath = __DIR__ . '/../' . ltrim($imagePath, '/');
+            
+            // Security: Ensure the path is within uploads directory
+            $realPath = realpath($fullPath);
+            $uploadsDir = realpath(__DIR__ . '/../assets/uploads/');
+            
+            if ($realPath && $uploadsDir && strpos($realPath, $uploadsDir) === 0) {
+                // File is within uploads directory, safe to delete
+                if (file_exists($realPath)) {
+                    if (unlink($realPath)) {
+                        $deletedFiles[] = basename($realPath);
+                    } else {
+                        $errors[] = "Failed to delete: " . basename($realPath);
+                    }
+                }
+            }
+        }
+        
+        // Log results (optional)
+        if (!empty($deletedFiles) || !empty($errors)) {
+            $logDir = __DIR__ . '/../logs/';
+            if (!is_dir($logDir)) mkdir($logDir, 0777, true);
+            
+            $logMessage = "[" . date('Y-m-d H:i:s') . "] Property ID: $propertyId\n";
+            if (!empty($deletedFiles)) {
+                $logMessage .= "Deleted files: " . implode(', ', $deletedFiles) . "\n";
+            }
+            if (!empty($errors)) {
+                $logMessage .= "Errors: " . implode(', ', $errors) . "\n";
+            }
+            $logMessage .= "------------------------\n\n";
+            
+            file_put_contents($logDir . 'image_deletion.log', $logMessage, FILE_APPEND);
+        }
+        
+        return [
+            'success' => true,
+            'deleted' => count($deletedFiles),
+            'errors' => $errors
+        ];
+        
+    } catch (Exception $e) {
+        // Log error but don't prevent property deletion
+        error_log("Error deleting property images: " . $e->getMessage());
+        return [
+            'success' => false,
+            'deleted' => 0,
+            'errors' => [$e->getMessage()]
+        ];
+    }
+}
 ?>

@@ -6,9 +6,14 @@ $brokerId = $_SESSION['user_id'];
 
 // Delete Property
 if (isset($_POST['delete_id'])) {
+    $deleteId = intval($_POST['delete_id']);
+    
+    // Delete images before deleting the property
+    deletePropertyImages($deleteId, $pdo);
+    
     $stmt = $pdo->prepare("DELETE FROM properties WHERE id = ? AND broker_id = ?");
-    $stmt->execute([$_POST['delete_id'], $brokerId]);
-    $success = "Property deleted successfully.";
+    $stmt->execute([$deleteId, $brokerId]);
+    $success = "Property and associated images deleted successfully.";
 }
 
 // Fetch properties

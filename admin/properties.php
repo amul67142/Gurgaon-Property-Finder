@@ -18,9 +18,12 @@ if (isset($_POST['action']) && isset($_POST['id'])) {
         $stmt->execute([$id]);
         $success = "Featured status updated.";
     } elseif ($_POST['action'] === 'delete') {
+        // Delete images before deleting the property
+        deletePropertyImages($id, $pdo);
+        
         $stmt = $pdo->prepare("DELETE FROM properties WHERE id = ?");
         $stmt->execute([$id]);
-        $success = "Property deleted successfully.";
+        $success = "Property and associated images deleted successfully.";
     }
 }
 
