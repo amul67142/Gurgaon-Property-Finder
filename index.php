@@ -357,7 +357,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
             $others = $stmt->fetchAll();
             ?>
 
-<!-- Other Listings Section -->
+<!-- Property Listings Section -->
 <section class="py-20 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 relative overflow-hidden border-t border-slate-700/50">
     <!-- Subtle Grid Pattern -->
     <div class="absolute inset-0 opacity-[0.03]">
@@ -374,7 +374,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                     <span class="text-cyan-400 font-bold tracking-widest uppercase text-xs flex items-center gap-2">
                         <i class="fa-solid fa-sparkles"></i> New Arrivals
                     </span>
-                    <h2 class="text-4xl font-bold text-white mt-2 font-display">Other Listings</h2>
+                    <h2 class="text-4xl font-bold text-white mt-2 font-display">Property Listings</h2>
                     <div class="w-24 h-1 bg-gradient-to-r from-cyan-400 to-transparent mt-3"></div>
                 </div>
                 <a href="properties.php" class="hidden md:flex items-center gap-2 text-slate-300 hover:text-cyan-400 transition text-sm font-medium group">
