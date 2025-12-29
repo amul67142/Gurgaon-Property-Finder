@@ -141,8 +141,8 @@ try {
 
     // 5. Call Gemini API
     $apiKey = 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
-    // Using v1 endpoint with gemini-1.5-flash
-    $apiUrl = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' . $apiKey;
+    // Using gemini-pro (most stable and widely available model)
+    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $apiKey;
 
     $data = [
         "contents" => [
