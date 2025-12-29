@@ -15,7 +15,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
     
     <div class="relative z-10 container mx-auto px-6 text-center text-white" data-aos="fade-up">
         <h1 class="text-3xl md:text-6xl font-bold mb-6 font-display leading-[1.1] md:leading-tight px-4 md:px-0 mt-8 md:mt-0">
-            Gurugram’s Only <span class="text-secondary">Zero-Spam</span> Real Estate Platform.
+            Gurugram Only <span class="text-secondary">Zero-Spam</span> Real Estate Platform.
         </h1>
         <p class="text-sm md:text-lg mb-10 text-slate-300 max-w-xl mx-auto font-light leading-relaxed px-6 md:px-0">
             Stop browsing fake listings. Start finding verified homes with AI-backed legal & investment checks.
