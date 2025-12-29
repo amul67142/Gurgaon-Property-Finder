@@ -600,13 +600,6 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 </a>
             </div>
         </div>
-
-        <!-- CTA Button -->
-        <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-            <a href="pricing.php" class="inline-flex items-center gap-2 text-white hover:text-secondary transition text-sm font-bold group">
-                View Full Comparison <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
     </div>
 </section>
 
