@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
+if (file_exists(__DIR__ . '/../config/secrets.php')) {
+    require_once __DIR__ . '/../config/secrets.php';
+}
 
 header('Content-Type: application/json');
 
@@ -44,12 +47,20 @@ try {
     }
 
     $size = $property['size_range'] ?? 'N/A';
+    $isFeatured = ($property['is_featured'] == 1);
     
     // 4. Construct Prompt
+    $persona = $isFeatured 
+        ? "You are a Senior Investment Strategist and Premium Asset Advisor specializing in high-value Gurugram real estate." 
+        : "You are a Senior Real Estate Investment Analyst specializing exclusively in the Gurugram (Gurgaon) real estate market.";
+
+    $toneGuidance = $isFeatured 
+        ? "This is a FEATURED PREMIUM property. Your tone should be highly positive, emphasizing the exceptional value, luxury, and long-term appreciation potential. Focus on why this is a 'Must-Invest' opportunity."
+        : "You are objective, blunt, and financially savvy.";
+
     $prompt = "
-    You are a Senior Real Estate Investment Analyst specializing exclusively in the Gurugram (Gurgaon) real estate market. 
-    Your job is to provide a critical, data-driven 'Investment Memo' for a potential buyer. 
-    You are objective, blunt, and financially savvy.
+    $persona
+    $toneGuidance
 
     ### THE PROPERTY DETAILS
     - **Property Type:** $type
@@ -81,17 +92,22 @@ try {
         <li><strong>⚠️ The Risk:</strong> (e.g., High traffic, waterlogging, noise, etc.)</li>
       </ul>
 
-      <div class='verdict' style='background:#eef; padding:10px; margin-top:10px; border-radius:5px;'>
-        <strong>🏁 Final Verdict:</strong> [One sentence summary]
+      <div class='verdict' style='background:" . ($isFeatured ? '#f0f9ff' : '#eef') . "; padding:10px; margin-top:10px; border-radius:5px; border: " . ($isFeatured ? '1px solid #bae6fd' : 'none') . "'>
+        <strong>🏁 Final Verdict:</strong> " . ($isFeatured ? "[Highly Recommended - Explain why this featured property is a top-tier choice]" : "[One sentence summary]") . "
       </div>
 
     </div>
     ";
 
     // 5. Call Gemini API
-    $apiKey = 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
-    // Using gemini-2.5-flash as per available models
-    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
+    $apiKey = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
+    // Priority models based on key authorization
+    $models = ['gemini-flash-latest', 'gemini-1.5-flash', 'gemini-pro-latest'];
+    $response = null;
+    $lastError = '';
+
+    foreach ($models as $model) {
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=" . $apiKey;
 
     $data = [
         "contents" => [
@@ -109,13 +125,31 @@ try {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-    $response = curl_exec($ch);
-    
-    if (curl_errno($ch)) {
-        throw new Exception('Curl error: ' . curl_error($ch));
+        $actualResponse = curl_exec($ch);
+        
+        if (curl_errno($ch)) {
+            $lastError = 'Curl error: ' . curl_error($ch);
+            curl_close($ch);
+            continue;
+        }
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode === 200) {
+            $response = $actualResponse;
+            break;
+        } else {
+            $responseData = json_decode($actualResponse, true);
+            $msg = $responseData['error']['message'] ?? 'Unknown API error';
+            $lastError = "API Error ($model): $msg";
+            error_log("Gemini API Error ($model): " . $actualResponse);
+        }
     }
-    
-    curl_close($ch);
+
+    if (!$response) {
+        throw new Exception($lastError ?: "Failed to generate report from AI provider.");
+    }
 
     $responseData = json_decode($response, true);
 
@@ -129,7 +163,7 @@ try {
         echo json_encode(['html' => $generatedHtml]);
     } else {
         // Fallback or Error from API
-        // error_log(print_r($responseData, true)); // Debug
+        error_log("Gemini API Error Response: " . $response); // Capture the raw error for logs
         throw new Exception("Failed to generate report from AI provider.");
     }
 

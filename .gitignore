@@ -49,6 +49,7 @@ node_modules/
 # Ignore sensitive configuration backups
 config/db.backup.php
 config/*.bak
+config/secrets.php
 
 # Ignore development/testing files
 test_*.php
