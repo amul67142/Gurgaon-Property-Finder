@@ -166,12 +166,12 @@ try {
 
                     <div class="border-r border-white/10 pr-4 md:pr-6 last:border-0">
                         <span class="block text-gold font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em] mb-1">Config</span>
-                        <span class="block text-white font-bold text-base md:text-lg whitespace-nowrap"><?php echo htmlspecialchars($property['configurations'] ?? 'N/A'); ?></span>
+                        <span class="block text-white font-bold text-sm md:text-base leading-tight"><?php echo htmlspecialchars($property['configurations'] ?? 'N/A'); ?></span>
                     </div>
                     
-                    <div class="last:border-0 flex flex-col justify-center">
+                    <div class="last:border-0 flex flex-col justify-center min-w-0">
                         <span class="block text-gold font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em] mb-1">RERA No.</span>
-                        <span class="block text-white font-bold text-[10px] md:text-md bg-white/5 md:bg-white/10 px-2 py-0.5 rounded border border-white/10 w-fit line-clamp-1" title="<?php echo htmlspecialchars($property['rera_no'] ?? ''); ?>">
+                        <span class="block text-white font-bold text-[10px] md:text-xs bg-white/5 md:bg-white/10 px-2 py-0.5 rounded border border-white/10 w-fit truncate max-w-full" title="<?php echo htmlspecialchars($property['rera_no'] ?? ''); ?>">
                             <?php echo htmlspecialchars($property['rera_no'] ?? 'N/A'); ?>
                         </span>
                     </div>
