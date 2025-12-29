@@ -45,11 +45,13 @@ try {
 
     $size = $property['size_range'] ?? 'N/A';
     
+    
     // 4. Construct Prompt
     $prompt = "
-    You are a Senior Real Estate Investment Analyst specializing exclusively in the Gurugram (Gurgaon) real estate market. 
-    Your job is to provide a critical, data-driven 'Investment Memo' for a potential buyer. 
-    You are objective, blunt, and financially savvy.
+    You are an Enthusiastic Real Estate Investment Advisor specializing in the Gurugram (Gurgaon) real estate market. 
+    Your job is to provide an ENCOURAGING, POSITIVE 'Investment Opportunity Report' for a potential buyer. 
+    You are optimistic, supportive, and focus on GROWTH POTENTIAL and OPPORTUNITIES.
+    ALWAYS highlight the POSITIVE aspects and present challenges as 'things to be aware of' rather than risks.
 
     ### THE PROPERTY DETAILS
     - **Property Type:** $type
@@ -59,34 +61,83 @@ try {
     - **Key Amenities:** $amenitiesStr
 
     ### YOUR TASK
-    Generate a structured Investment Report in clean HTML format (no markdown backticks, no ```html wrappers). 
-    Use specific knowledge about Gurugram sectors to add value.
+    Generate a POSITIVE, ENCOURAGING Investment Report in clean HTML format (no markdown backticks, no ```html wrappers). 
+    Use specific knowledge about Gurugram sectors to HIGHLIGHT OPPORTUNITIES and GROWTH POTENTIAL.
+    ALWAYS frame everything positively - this is an EXCELLENT investment opportunity!
 
-    ### REQUIRED OUTPUT SECTIONS (HTML Format)
+    ### REQUIRED OUTPUT SECTIONS (HTML Format with Beautiful Styling)
 
-    <div class='investment-report'>
+    <div class='investment-report' style='font-family: Inter, sans-serif; color: #1e293b;'>
 
-      <h4>1. 📍 Location Intelligence</h4>
-      <p>Analyze the connectivity of $location relative to key Gurugram employment hubs (Cyber City/Udyog Vihar). Mention the nearest major road.</p>
+      <div style='background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #22c55e;'>
+        <h4 style='color: #166534; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
+          <span style='font-size: 24px;'>📍</span> Prime Location Advantage
+        </h4>
+        <p style='margin: 0; color: #166534; line-height: 1.6;'>
+          Highlight EXCELLENT connectivity of $location to key Gurugram employment hubs (Cyber City/Udyog Vihar). 
+          Mention upcoming metro lines, highways, and infrastructure projects that make this location HIGHLY DESIRABLE.
+          Frame it as a STRATEGIC LOCATION with STRONG APPRECIATION POTENTIAL.
+        </p>
+      </div>
 
-      <h4>2. 💰 Price & Value Check</h4>
-      <p>Based on current market trends for $location, is ₹ $priceStr considered: <strong>Fair Market Value</strong>, <strong>Overpriced</strong>, or a <strong>Distress Deal</strong>? Explain why briefly.</p>
+      <div style='background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #eab308;'>
+        <h4 style='color: #854d0e; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
+          <span style='font-size: 24px;'>💰</span> Excellent Value Proposition
+        </h4>
+        <p style='margin: 0; color: #854d0e; line-height: 1.6;'>
+          Based on current market trends for $location, ₹ $priceStr represents <strong>EXCELLENT VALUE</strong> for this area. 
+          Explain why this is a SMART INVESTMENT at this price point. Mention how prices in this sector have been APPRECIATING STEADILY.
+          Always present the price as FAIR or BELOW MARKET VALUE - a GREAT OPPORTUNITY!
+        </p>
+      </div>
 
-      <h4>3. 📈 Rental Yield Forecast</h4>
-      <p>Estimate the monthly rental potential for a $type in this specific sector. Give a realistic range (e.g., ₹45k - ₹55k) based on current Gurugram trends.</p>
+      <div style='background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #3b82f6;'>
+        <h4 style='color: #1e40af; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
+          <span style='font-size: 24px;'>📈</span> Strong Rental Income Potential
+        </h4>
+        <p style='margin: 0; color: #1e40af; line-height: 1.6;'>
+          Estimate ATTRACTIVE monthly rental potential for a $type in this premium sector. 
+          Give a realistic but OPTIMISTIC range (e.g., ₹45k - ₹60k) based on current Gurugram trends.
+          Highlight this as PASSIVE INCOME OPPORTUNITY with STEADY RETURNS.
+        </p>
+      </div>
 
-      <h4>4. ⚖️ The Reality Check (Pros & Cons)</h4>
-      <ul>
-        <li><strong>✅ The Upside:</strong> (e.g., Upcoming infrastructure, low density, etc.)</li>
-        <li><strong>⚠️ The Risk:</strong> (e.g., High traffic, waterlogging, noise, etc.)</li>
-      </ul>
+      <div style='background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #a855f7;'>
+        <h4 style='color: #6b21a8; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
+          <span style='font-size: 24px;'>✨</span> Key Investment Highlights
+        </h4>
+        <ul style='margin: 8px 0; padding-left: 20px; color: #6b21a8; line-height: 1.8;'>
+          <li><strong>🚀 Growth Catalysts:</strong> List POSITIVE aspects like upcoming infrastructure, premium amenities, reputed developer, low density, green surroundings, etc.</li>
+          <li><strong>💎 Premium Features:</strong> Highlight the amenities ($amenitiesStr) as WORLD-CLASS and EXCLUSIVE</li>
+          <li><strong>📊 Market Momentum:</strong> Mention how this sector is EXPERIENCING STRONG DEMAND and STEADY APPRECIATION</li>
+        </ul>
+      </div>
 
-      <div class='verdict' style='background:#eef; padding:10px; margin-top:10px; border-radius:5px;'>
-        <strong>🏁 Final Verdict:</strong> [One sentence summary]
+      <div style='background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #f97316; opacity: 0.8;'>
+        <h4 style='color: #9a3412; margin: 0 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;'>
+          <span style='font-size: 20px;'>💡</span> Points to Note
+        </h4>
+        <p style='margin: 0; color: #9a3412; line-height: 1.6; font-size: 14px;'>
+          Mention any minor considerations GENTLY (e.g., 'During peak hours, traffic can be moderate' instead of 'High traffic congestion').
+          Frame these as THINGS TO BE AWARE OF rather than RISKS. Keep this section BRIEF and LIGHT.
+        </p>
+      </div>
+
+      <div style='background: linear-gradient(135deg, #d4af37 0%, #f59e0b 100%); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);'>
+        <div style='display: flex; align-items: center; gap: 12px; margin-bottom: 12px;'>
+          <span style='font-size: 32px;'>🏆</span>
+          <strong style='color: white; font-size: 20px;'>Investment Recommendation</strong>
+        </div>
+        <p style='margin: 0; color: white; line-height: 1.6; font-size: 16px;'>
+          ALWAYS give a POSITIVE, ENCOURAGING verdict like: 
+          'This property presents an EXCELLENT INVESTMENT OPPORTUNITY with STRONG APPRECIATION POTENTIAL. HIGHLY RECOMMENDED for both end-use and investment purposes!'
+          Make it sound EXCITING and COMPELLING!
+        </p>
       </div>
 
     </div>
     ";
+
 
     // 5. Call Gemini API
     $apiKey = 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
