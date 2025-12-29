@@ -109,7 +109,7 @@ $recentProperties = $stmt->fetchAll();
                             <?php foreach ($recentProperties as $prop): ?>
                                 <tr class="border-b border-slate-50 hover:bg-slate-50 transition">
                                     <td class="py-4 pl-4 font-medium text-slate-700"><?php echo htmlspecialchars($prop['title']); ?></td>
-                                    <td class="py-4 text-slate-500">$<?php echo number_format($prop['price']); ?></td>
+                                    <td class="py-4 px-4 text-slate-600"><?php echo formatPrice($prop['price']); ?></td>
                                     <td class="py-4">
                                         <span class="px-2.5 py-1 rounded-full text-xs font-bold 
                                             <?php echo $prop['status'] === 'ready_to_move' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'; ?>">

@@ -230,4 +230,18 @@ function deletePropertyImages($propertyId, $pdo) {
         ];
     }
 }
+/**
+ * Format Price in Rupees with Cr/Lac suffixes
+ */
+function formatPrice($amount) {
+    if (!is_numeric($amount)) return '₹' . $amount;
+    
+    if ($amount >= 10000000) {
+        return '₹' . number_format($amount / 10000000, 2) . ' Cr';
+    } elseif ($amount >= 100000) {
+        return '₹' . number_format($amount / 100000, 2) . ' Lac';
+    }
+    return '₹' . number_format($amount);
+}
+
 ?>

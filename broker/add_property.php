@@ -251,12 +251,12 @@ if (!$isAjax) {
                             <input type="text" name="location" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary outline-none transition" placeholder="e.g. Sector 42, Gurgaon" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Price </label>
-                            <input type="number" name="price" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary outline-none transition" placeholder="Amount in Numbers" required>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Price (₹)</label>
+                            <input type="number" name="price" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/50 focus:border-secondary outline-none transition" placeholder="e.g. 15000000" required>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Price Text</label>
-                            <input type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/50 outline-none transition" placeholder="e.g. INR 1.2 Cr onwards">
+                            <input type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/50 outline-none transition" placeholder="e.g. ₹ 1.5 Cr onwards">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Type</label>

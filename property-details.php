@@ -150,11 +150,7 @@ try {
                     <div class="border-r border-white/10 pr-4 md:pr-6 last:border-0">
                         <span class="block text-gold font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em] mb-1">Price</span>
                         <span class="block text-white font-bold text-base md:text-lg whitespace-nowrap">
-                            <?php 
-                                $price = $property['price'];
-                                if ($price >= 10000000) echo number_format($price / 10000000, 2) . ' Cr*';
-                                else echo number_format($price / 100000, 2) . ' Lac*';
-                            ?>
+                            <?php echo formatPrice($property['price']); ?>
                         </span>
                     </div>
 

@@ -74,7 +74,7 @@ $properties = $stmt->fetchAll();
                             <?php foreach ($properties as $prop): ?>
                                 <tr class="hover:bg-slate-50 transition">
                                     <td class="py-4 pl-6 font-medium text-slate-800"><?php echo htmlspecialchars($prop['title']); ?></td>
-                                    <td class="py-4 px-4 text-slate-600">$<?php echo number_format($prop['price']); ?></td>
+                                    <td class="py-4 px-4 text-slate-600"><?php echo formatPrice($prop['price']); ?></td>
                                     <td class="py-4 px-4 text-slate-500 capitalize"><?php echo ucwords($prop['type']); ?></td>
                                     <td class="py-4 px-4">
                                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold 

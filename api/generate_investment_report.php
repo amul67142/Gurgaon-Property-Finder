@@ -84,7 +84,7 @@ try {
       <p>Based on current market trends for $location, is ₹ $priceStr considered: <strong>Fair Market Value</strong>, <strong>Overpriced</strong>, or a <strong>Distress Deal</strong>? Explain why briefly.</p>
 
       <h4>3. 📈 Rental Yield Forecast</h4>
-      <p>Estimate the monthly rental potential for a $type in this specific sector. Give a realistic range (e.g., ₹45k - ₹55k) based on current Gurugram trends.</p>
+      <p>Estimate the monthly rental potential for a $type in this specific sector. Give a realistic range (e.g., ₹45,000 - ₹55,000) based on current Gurugram trends.</p>
 
       <h4>4. ⚖️ The Reality Check (Pros & Cons)</h4>
       <ul>
