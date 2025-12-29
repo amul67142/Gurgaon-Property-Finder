@@ -203,7 +203,7 @@ try {
                                                 ?>
                                              </p>
                                          </div>
-                                         <a href="property-details/<?php echo htmlspecialchars($prop['slug'] ?? $prop['id']); ?>" class="bg-secondary text-white px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
+                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
                                              Details <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
                                          </a>
                                          <?php else: ?>
@@ -214,7 +214,7 @@ try {
                                                 else echo number_format($price / 100000, 2) . ' L';
                                             ?>
                                          </p>
-                                         <a href="property-details/<?php echo htmlspecialchars($prop['slug'] ?? $prop['id']); ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
+                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                          <?php endif; ?>
                                     </div>
                                     <?php else: ?>
@@ -227,7 +227,7 @@ try {
                                                 else echo number_format($price / 100000, 2) . ' L';
                                             ?>
                                          </p>
-                                         <a href="property-details/<?php echo htmlspecialchars($prop['slug'] ?? $prop['id']); ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
+                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                     </div>
                                     <?php endif; ?>
                                 </div>

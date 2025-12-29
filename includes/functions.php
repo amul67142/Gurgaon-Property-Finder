@@ -230,19 +230,4 @@ function deletePropertyImages($propertyId, $pdo) {
         ];
     }
 }
-
-/**
- * Generate URL-friendly slug from text
- */
-function generateSlug($text) {
-    // Convert to lowercase
-    $slug = strtolower($text);
-    // Replace spaces and special chars with hyphens
-    $slug = preg_replace('/[^a-z0-9-]+/', '-', $slug);
-    // Remove multiple consecutive hyphens
-    $slug = preg_replace('/-+/', '-', $slug);
-    // Trim hyphens from start and end
-    $slug = trim($slug, '-');
-    return $slug;
-}
 ?>

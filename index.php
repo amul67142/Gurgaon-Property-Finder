@@ -338,7 +338,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                             ?>
                                          </p>
                                      </div>
-                                     <a href="property-details/<?php echo htmlspecialchars($prop['slug'] ?? $prop['id']); ?>" class="bg-secondary text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
+                                     <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
                                          Details <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
                                      </a>
                                 </div>
@@ -412,7 +412,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                             else echo number_format($price / 100000, 2) . ' L';
                                         ?>
                                      </p>
-                                     <a href="property-details/<?php echo htmlspecialchars($prop['slug'] ?? $prop['id']); ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
+                                     <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
                                          View Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                      </a>
                                 </div>

@@ -732,7 +732,7 @@ function closeReportModal() {
                 $bgImg = get_property_cover($rp['id'], $pdo);
                 $sImg = get_seller_logo($rp);
             ?>
-            <a href="property-details/<?php echo htmlspecialchars($rp['slug'] ?? $rp['id']); ?>" class="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-stone-100 h-full mb-6 md:mb-0">
+            <a href="property-details.php?slug=<?php echo htmlspecialchars($rp['slug'] ?? ''); ?>&id=<?php echo $rp['id']; ?>" class="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-stone-100 h-full mb-6 md:mb-0">
                 <div class="relative h-64 shrink-0 overflow-hidden">
                     <img src="<?php echo htmlspecialchars($bgImg); ?>" alt="<?php echo htmlspecialchars($rp['title']); ?>" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold text-slate-900 shadow-sm">
