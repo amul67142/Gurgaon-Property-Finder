@@ -104,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         try {
+            error_log("Starting property update for ID: " . $id);
             $pdo->beginTransaction();
 
             // Determine Approval Status (Admins = 1, Brokers = 0)
@@ -187,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
+            error_log("Successfully updated property ID: " . $id);
             $success = 'Property updated successfully! It may require approval again if sensitive details were changed.';
             
             if ($isAjax) {
@@ -745,27 +747,38 @@ document.getElementById('propertyForm').addEventListener('submit', function(e) {
     document.getElementById('location_advantages_json').value = locations.join(',');
 
     // Only use AJAX for the main Update button
-    const submitBtn = e.submitter && !e.submitter.name.startsWith('delete_') ? e.submitter : null;
+    const submitBtn = e.submitter && (e.submitter.name ? !e.submitter.name.startsWith('delete_') : true) ? e.submitter : null;
     
     if (submitBtn) {
         e.preventDefault();
         const originalBtnText = submitBtn.innerHTML;
+        const formElement = e.currentTarget;
         
         // Show Loading State
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Updating...';
 
-        const formData = new FormData(form);
+        console.log('Starting property update AJAX fetch...');
+        const formData = new FormData(formElement);
+
+        // Abort controller for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
         fetch(window.location.href, {
             method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: formData
+            body: formData,
+            signal: controller.signal
         })
-        .then(response => response.json())
+        .then(response => {
+            clearTimeout(timeoutId);
+            return response.json();
+        })
         .then(data => {
+            console.log('Update Response:', data);
             if (data.success) {
                 showToast(data.message, 'success');
                 // Clear storage
@@ -781,7 +794,9 @@ document.getElementById('propertyForm').addEventListener('submit', function(e) {
             }
         })
         .catch(error => {
-            showToast('Something went wrong. Please try again.', 'error');
+            clearTimeout(timeoutId);
+            const errorMsg = error.name === 'AbortError' ? 'Update timed out. Large files may take longer.' : 'Something went wrong. Please try again.';
+            showToast(errorMsg, 'error');
             console.error('Submission Error:', error);
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
@@ -1030,12 +1045,7 @@ function restoreFormData() {
     });
 }
 
-// Clear storage on successful submit
-document.getElementById('propertyForm').addEventListener('submit', () => {
-    setTimeout(() => {
-        localStorage.removeItem(FORM_STORAGE_KEY);
-    }, 1000);
-});
+// FORM_STORAGE_KEY is already defined above
 
 // Event listeners for persistence
 document.addEventListener('DOMContentLoaded', () => {
