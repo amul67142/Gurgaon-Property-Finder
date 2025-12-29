@@ -45,127 +45,93 @@ try {
 
     $size = $property['size_range'] ?? 'N/A';
     
-    
+    // 4. Construct Prompt
+    $prompt = "
+    You are a Senior Real Estate Investment Analyst specializing exclusively in the Gurugram (Gurgaon) real estate market. 
+    Your job is to provide a critical, data-driven 'Investment Memo' for a potential buyer. 
+    You are objective, blunt, and financially savvy.
 
-    // 4. Generate Beautiful Positive Investment Report (Template-based - No API needed!)
-    
-    // Helper function to determine location quality
-    function getLocationAnalysis($location) {
-        $location = strtolower($location);
-        
-        // Premium sectors in Gurugram
-        $premiumSectors = ['cyber city', 'golf course', 'dlf', 'phase', 'sohna', 'mg road', 'sector 54', 'sector 56'];
-        $isPremium = false;
-        foreach ($premiumSectors as $area) {
-            if (strpos($location, $area) !== false) {
-                $isPremium = true;
-                break;
-            }
-        }
-        
-        if ($isPremium) {
-            return [
-                'quality' => 'Prime',
-                'connectivity' => 'excellent connectivity to Cyber City, Udyog Vihar, and major corporate hubs',
-                'infrastructure' => 'Upcoming metro expansion and modern highway access make this a highly sought-after location',
-                'appreciation' => 'This premium sector has shown consistent 8-12% annual appreciation'
-            ];
-        } else {
-            return [
-                'quality' => 'Strategic',
-                'connectivity' => 'well-connected to major Gurugram employment zones and NH-8',
-                'infrastructure' => 'Rapidly developing infrastructure with excellent future growth potential',
-                'appreciation' => 'Emerging location with strong 10-15% appreciation potential as infrastructure develops'
-            ];
-        }
-    }
-    
-    // Get location analysis
-    $locAnalysis = getLocationAnalysis($location);
-    
-    // Calculate rental estimate based on price
-    $rentalLow = round(($price * 0.0025) / 1000) * 1000; // ~0.25% monthly
-    $rentalHigh = round(($price * 0.0035) / 1000) * 1000; // ~0.35% monthly
-    
-    // Format rental range
-    $rentalRange = '₹' . number_format($rentalLow/1000, 0) . 'k - ₹' . number_format($rentalHigh/1000, 0) . 'k';
-    
-    // Generate the beautiful HTML report
-    $reportHtml = "
-    <div class='investment-report' style='font-family: Inter, sans-serif; color: #1e293b;'>
+    ### THE PROPERTY DETAILS
+    - **Property Type:** $type
+    - **Location/Sector:** $location
+    - **Asking Price:** ₹ $priceStr
+    - **Size:** $size
+    - **Key Amenities:** $amenitiesStr
 
-      <div style='background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #22c55e;'>
-        <h4 style='color: #166534; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
-          <span style='font-size: 24px;'>📍</span> {$locAnalysis['quality']} Location Advantage
-        </h4>
-        <p style='margin: 0; color: #166534; line-height: 1.6;'>
-          <strong>$location</strong> offers {$locAnalysis['connectivity']}. {$locAnalysis['infrastructure']}. 
-          This strategic positioning ensures <strong>excellent capital appreciation potential</strong> and makes it highly attractive for both end-users and investors.
-        </p>
-      </div>
+    ### YOUR TASK
+    Generate a structured Investment Report in clean HTML format (no markdown backticks, no ```html wrappers). 
+    Use specific knowledge about Gurugram sectors to add value.
 
-      <div style='background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #eab308;'>
-        <h4 style='color: #854d0e; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
-          <span style='font-size: 24px;'>💰</span> Excellent Value Proposition
-        </h4>
-        <p style='margin: 0; color: #854d0e; line-height: 1.6;'>
-          At <strong>₹ $priceStr</strong>, this property represents <strong>OUTSTANDING VALUE</strong> for the area. 
-          Current market analysis shows this is priced <strong>competitively</strong> compared to similar properties in $location. 
-          {$locAnalysis['appreciation']}, making this an <strong>IDEAL INVESTMENT OPPORTUNITY</strong> at current pricing!
-        </p>
-      </div>
+    ### REQUIRED OUTPUT SECTIONS (HTML Format)
 
-      <div style='background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #3b82f6;'>
-        <h4 style='color: #1e40af; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
-          <span style='font-size: 24px;'>📈</span> Strong Rental Income Potential
-        </h4>
-        <p style='margin: 0; color: #1e40af; line-height: 1.6;'>
-          Based on current Gurugram market trends, this $type can command an <strong>attractive monthly rental</strong> of approximately <strong>$rentalRange</strong>. 
-          This translates to a <strong>healthy 3-4% annual rental yield</strong>, providing excellent passive income while your asset appreciates. 
-          High demand in this locality ensures <strong>minimal vacancy periods</strong>!
-        </p>
-      </div>
+    <div class='investment-report'>
 
-      <div style='background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #a855f7;'>
-        <h4 style='color: #6b21a8; margin: 0 0 12px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;'>
-          <span style='font-size: 24px;'>✨</span> Key Investment Highlights
-        </h4>
-        <ul style='margin: 8px 0; padding-left: 20px; color: #6b21a8; line-height: 1.8;'>
-          <li><strong>🚀 Growth Catalysts:</strong> Rapidly developing infrastructure, proximity to employment hubs, and upcoming metro connectivity create a <strong>perfect storm for appreciation</strong></li>
-          <li><strong>💎 Premium Features:</strong> World-class amenities including $amenitiesStr make this property stand out in its category</li>
-          <li><strong>📊 Market Momentum:</strong> Gurugram real estate market is experiencing <strong>robust demand</strong> with steady price appreciation of 8-12% annually</li>
-          <li><strong>🏗️ Quality Construction:</strong> Modern architecture with size of $size offering excellent space utilization</li>
-        </ul>
-      </div>
+      <h4>1. 📍 Location Intelligence</h4>
+      <p>Analyze the connectivity of $location relative to key Gurugram employment hubs (Cyber City/Udyog Vihar). Mention the nearest major road.</p>
 
-      <div style='background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 20px; border-radius: 16px; margin-bottom: 20px; border-left: 4px solid #f97316; opacity: 0.85;'>
-        <h4 style='color: #9a3412; margin: 0 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;'>
-          <span style='font-size: 20px;'>💡</span> Points to Note
-        </h4>
-        <p style='margin: 0; color: #9a3412; line-height: 1.6; font-size: 14px;'>
-          As with any growing urban area, peak hours may see moderate traffic flow. However, the convenience of nearby amenities and excellent public transport options more than compensate. 
-          <strong>Early investment in developing areas historically yields the best returns!</strong>
-        </p>
-      </div>
+      <h4>2. 💰 Price & Value Check</h4>
+      <p>Based on current market trends for $location, is ₹ $priceStr considered: <strong>Fair Market Value</strong>, <strong>Overpriced</strong>, or a <strong>Distress Deal</strong>? Explain why briefly.</p>
 
-      <div style='background: linear-gradient(135deg, #d4af37 0%, #f59e0b 100%); padding: 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);'>
-        <div style='display: flex; align-items: center; gap: 12px; margin-bottom: 12px;'>
-          <span style='font-size: 32px;'>🏆</span>
-          <strong style='color: white; font-size: 20px;'>Investment Recommendation</strong>
-        </div>
-        <p style='margin: 0; color: white; line-height: 1.6; font-size: 16px;'>
-          This property presents an <strong>EXCELLENT INVESTMENT OPPORTUNITY</strong> with strong appreciation potential in a prime Gurugram location. 
-          The combination of competitive pricing, premium amenities, strategic location, and robust rental demand makes this 
-          <strong>HIGHLY RECOMMENDED</strong> for both end-use and investment purposes. <strong>Don't miss out on this opportunity!</strong>
-        </p>
+      <h4>3. 📈 Rental Yield Forecast</h4>
+      <p>Estimate the monthly rental potential for a $type in this specific sector. Give a realistic range (e.g., ₹45k - ₹55k) based on current Gurugram trends.</p>
+
+      <h4>4. ⚖️ The Reality Check (Pros & Cons)</h4>
+      <ul>
+        <li><strong>✅ The Upside:</strong> (e.g., Upcoming infrastructure, low density, etc.)</li>
+        <li><strong>⚠️ The Risk:</strong> (e.g., High traffic, waterlogging, noise, etc.)</li>
+      </ul>
+
+      <div class='verdict' style='background:#eef; padding:10px; margin-top:10px; border-radius:5px;'>
+        <strong>🏁 Final Verdict:</strong> [One sentence summary]
       </div>
 
     </div>
     ";
+
+    // 5. Call Gemini API
+    $apiKey = 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
+    // Using gemini-2.5-flash as per available models
+    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
+
+    $data = [
+        "contents" => [
+            [
+                "parts" => [
+                    ["text" => $prompt]
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+    $response = curl_exec($ch);
     
+    if (curl_errno($ch)) {
+        throw new Exception('Curl error: ' . curl_error($ch));
+    }
     
-    // Return the generated report
-    echo json_encode(['html' => $reportHtml]);
+    curl_close($ch);
+
+    $responseData = json_decode($response, true);
+
+    if (isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+        $generatedHtml = $responseData['candidates'][0]['content']['parts'][0]['text'];
+        
+        // Clean up any potential markdown code blocks if the model ignores instructions
+        $generatedHtml = str_replace('```html', '', $generatedHtml);
+        $generatedHtml = str_replace('```', '', $generatedHtml);
+        
+        echo json_encode(['html' => $generatedHtml]);
+    } else {
+        // Fallback or Error from API
+        // error_log(print_r($responseData, true)); // Debug
+        throw new Exception("Failed to generate report from AI provider.");
+    }
 
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
