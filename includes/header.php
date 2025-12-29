@@ -17,6 +17,9 @@ require_once __DIR__ . '/functions.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gurgaon Property Finder</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
