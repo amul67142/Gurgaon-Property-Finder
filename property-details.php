@@ -462,9 +462,9 @@ try {
                                      </div>
         
                                      <!-- View Button Overlay -->
-                                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
-                                         <a href="<?php echo htmlspecialchars($fpImg); ?>" target="_blank" class="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-xs shadow-xl hover:bg-secondary hover:text-white transition uppercase tracking-wider">View</a>
-                                     </div>
+                                      <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 backdrop-blur-sm">
+                                          <button onclick="openModal('enquiry')" class="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-xs shadow-xl hover:bg-secondary hover:text-white transition uppercase tracking-wider">View</button>
+                                      </div>
                                  <?php else: ?>
                                      <!-- Default Icon/Vector (No Image Set) -->
                                      <div class="text-center p-6 group-hover:scale-110 transition duration-500">
