@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
 
             // Determine Approval Status (Admins = 1, Brokers = 0)
-            $newStatus = ($_SESSION['user_role'] === 'admin') ? 1 : 0;
+            $newStatus = 1; // Auto-approve all property edits
 
             // Update Property
             $stmt = $pdo->prepare("UPDATE properties SET 

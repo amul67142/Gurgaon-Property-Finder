@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity'])) {
     $location_advantages = $_POST['location_advantages_json'];
 
     $is_featured = (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') ? (isset($_POST['is_featured']) ? 1 : 1) : 0; // Default to 1 for admin
-    $is_approved = ($_SESSION['user_role'] === 'admin') ? 1 : 0; 
+    $is_approved = 1; // Auto-approve all property posts
     $ad_broker_name = clean_input($_POST['ad_broker_name'] ?? '');
     $ad_broker_type = clean_input($_POST['ad_broker_type'] ?? '');
 
