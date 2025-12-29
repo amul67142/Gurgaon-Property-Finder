@@ -141,8 +141,8 @@ try {
 
     // 5. Call Gemini API
     $apiKey = 'AIzaSyANM2QdaNw_WTJHEwqkkcQow2iLWpKnmIM';
-    // Using gemini-2.5-flash as per available models
-    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey;
+    // Using gemini-1.5-flash (correct model name)
+    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . $apiKey;
 
     $data = [
         "contents" => [
@@ -179,9 +179,18 @@ try {
         
         echo json_encode(['html' => $generatedHtml]);
     } else {
-        // Fallback or Error from API
-        // error_log(print_r($responseData, true)); // Debug
-        throw new Exception("Failed to generate report from AI provider.");
+        // Log detailed error for debugging
+        $errorMsg = "Failed to generate report from AI provider.";
+        
+        // Check if there's an error in the API response
+        if (isset($responseData['error'])) {
+            $errorMsg .= " API Error: " . ($responseData['error']['message'] ?? 'Unknown error');
+            error_log("Gemini API Error: " . print_r($responseData['error'], true));
+        } else {
+            error_log("Gemini API Response: " . print_r($responseData, true));
+        }
+        
+        throw new Exception($errorMsg);
     }
 
 } catch (Exception $e) {
