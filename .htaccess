@@ -1,11 +1,17 @@
+# Enable URL Rewriting
 RewriteEngine On
-RewriteBase /
+RewriteBase /ggn/
 
-# Protect config folder
-RewriteRule ^config/ - [F]
+# Property Details Clean URLs
+# Redirect /property-details/slug-name to property-details.php?slug=slug-name
+RewriteRule ^property-details/([a-z0-9-]+)/?$ property-details.php?slug=$1 [L,QSA]
 
-# SEO Friendly URLs (Optional simple rewrites)
-# RewriteRule ^property/([0-9]+)$ property-details.php?id=$1 [L]
+# Remove trailing slashes (optional, for consistency)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [L,R=301]
 
-# Error Documents
-ErrorDocument 404 /index.php
+# Prevent direct access to .php files (optional)
+# RewriteCond %{THE_REQUEST} \.php
+# RewriteCond %{REQUEST_URI} !^/property-details\.php
+# RewriteRule ^(.*)\.php$ /$1 [R=301,L]
