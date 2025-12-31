@@ -123,24 +123,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity'])) {
                 $pdo->prepare("UPDATE properties SET ad_broker_image = ? WHERE id = ?")->execute([$adBrokerImgPath, $propertyId]);
             }
 
-            // Upload Gallery
+            // 1. Upload Main Cover Photo (Dedicated Field)
+            $coverImgPath = uploadFile('cover_image', $uploadDir);
+            if ($coverImgPath) {
+                $stmt = $pdo->prepare("INSERT INTO property_images (property_id, image_path, is_cover) VALUES (?, ?, ?)");
+                $stmt->execute([$propertyId, $coverImgPath, 1]);
+            }
+
+            // 2. Upload Gallery (No automatic cover assignment)
             if (isset($_FILES['images'])) {
                 $files = $_FILES['images'];
-                $coverSet = false;
                 for ($i = 0; $i < count($files['name']); $i++) {
                     if ($files['error'][$i] === UPLOAD_ERR_OK) {
                         if ($files['size'][$i] > 2 * 1024 * 1024) {
                             throw new Exception("Gallery image " . $files['name'][$i] . " exceeds 2MB limit.");
                         }
                         $tmpName = $files['tmp_name'][$i];
-                        $name = time() . '_' . $i . '_' . basename($files['name'][$i]);
+                        $name = time() . '_g_' . $i . '_' . basename($files['name'][$i]);
                         $destination = $uploadDir . $name;
                         
                         if (move_uploaded_file($tmpName, $destination)) {
-                            $isFirst = (!$coverSet) ? 1 : 0;
                             $stmt = $pdo->prepare("INSERT INTO property_images (property_id, image_path, is_cover) VALUES (?, ?, ?)");
-                            $stmt->execute([$propertyId, 'assets/uploads/' . $name, $isFirst]);
-                            $coverSet = true;
+                            $stmt->execute([$propertyId, 'assets/uploads/' . $name, 0]);
                         }
                     }
                 }
@@ -457,7 +461,21 @@ if (!$isAjax) {
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Upload Gallery</label>
+                             <label class="block text-sm font-medium text-slate-700 mb-2">Main Cover Photo <span class="text-red-500">*</span></label>
+                             <div class="border-2 border-dashed border-secondary/30 rounded-xl p-8 text-center hover:bg-secondary/5 transition cursor-pointer relative bg-secondary/5 mb-8">
+                                 <input type="file" name="cover_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" required onchange="previewCoverImage(this)">
+                                 <div id="cover-preview-placeholder">
+                                     <i class="fa-solid fa-image text-3xl text-secondary mb-2"></i>
+                                     <p class="text-sm font-medium text-slate-700">Select Main Cover Photo</p>
+                                     <p class="text-xs text-slate-500 mt-1">This will be the primary image for the listing</p>
+                                 </div>
+                                 <div id="cover-preview-container" class="hidden">
+                                      <img id="cover-preview" src="#" class="mx-auto h-40 w-auto rounded-lg object-cover shadow-md border-2 border-white">
+                                      <p class="text-xs text-secondary mt-2 font-medium">Click or Drag to change cover photo</p>
+                                 </div>
+                             </div>
+
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Gallery Images</label>
                             
                             <!-- Preview Container -->
                             <div id="image-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 hidden"></div>
@@ -663,6 +681,25 @@ function addFloorPlan() {
 
 <script>
 let selectedFiles = new DataTransfer();
+
+function previewCoverImage(input) {
+    const placeholder = document.getElementById('cover-preview-placeholder');
+    const container = document.getElementById('cover-preview-container');
+    const preview = document.getElementById('cover-preview');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            placeholder.classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        placeholder.classList.remove('hidden');
+        container.classList.add('hidden');
+    }
+}
 
 function previewImages(input) {
     const container = document.getElementById('image-preview-container');

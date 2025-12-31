@@ -170,29 +170,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $pdo->prepare("UPDATE properties SET ad_broker_image = ? WHERE id = ?")->execute([$adBrokerImgPath, $id]);
             }
 
-            // Upload New Gallery Images
+            // 1. Handle Dedicated Cover Photo Upload
+            $newCoverPath = uploadFile('cover_image', $uploadDir);
+            if ($newCoverPath) {
+                // Unset current cover
+                $pdo->prepare("UPDATE property_images SET is_cover = 0 WHERE property_id = ? AND is_cover = 1")->execute([$id]);
+                // Insert new cover
+                $pdo->prepare("INSERT INTO property_images (property_id, image_path, is_cover) VALUES (?, ?, 1)")->execute([$id, $newCoverPath]);
+            }
+
+            // 2. Upload New Gallery Images (No automatic cover assignment)
             if (isset($_FILES['images']) && $_FILES['images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
                 $files = $_FILES['images'];
-                
-                // Check if a cover image exists
-                $checkCover = $pdo->prepare("SELECT COUNT(*) FROM property_images WHERE property_id = ? AND is_cover = 1");
-                $checkCover->execute([$id]);
-                $hasCover = $checkCover->fetchColumn() > 0;
-                
                 for ($i = 0; $i < count($files['name']); $i++) {
                     if ($files['error'][$i] === UPLOAD_ERR_OK) {
                         if ($files['size'][$i] > 2 * 1024 * 1024) {
                             throw new Exception("Gallery image " . $files['name'][$i] . " exceeds 2MB limit.");
                         }
                         $tmpName = $files['tmp_name'][$i];
-                        $name = time() . '_' . $i . '_' . basename($files['name'][$i]);
+                        $name = time() . '_eg_' . $i . '_' . basename($files['name'][$i]);
                         $destination = $uploadDir . $name;
                         
                         if (move_uploaded_file($tmpName, $destination)) {
-                            $isCover = (!$hasCover) ? 1 : 0;
                             $stmt = $pdo->prepare("INSERT INTO property_images (property_id, image_path, is_cover) VALUES (?, ?, ?)");
-                            $stmt->execute([$id, 'assets/uploads/' . $name, $isCover]);
-                            $hasCover = true; // First one becomes cover, others won't
+                            $stmt->execute([$id, 'assets/uploads/' . $name, 0]);
                         }
                     }
                 }
@@ -678,38 +679,51 @@ if (!$isAjax) {
                     <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
                         <span class="w-8 h-8 rounded-full bg-blue-50 text-secondary flex items-center justify-center text-sm">7</span> Media & Links
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Upload New Images (Adds to existing)</label>
-                            
-                            <!-- Image Preview Container -->
-                            <div id="image-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 hidden"></div>
-
-                            <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition cursor-pointer relative bg-slate-50">
-                                <input type="file" name="images[]" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onchange="previewImages(this)">
-                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
-                                <p class="text-sm font-medium text-slate-700">Click to select multiple photos</p>
-                                <p class="text-xs text-slate-500 mt-1">Accepts JPG, PNG, WEBP</p>
-                            </div>
-                        </div>
-
-                         <!-- Cover Image Section -->
-                        <?php if($coverImage): ?>
-                        <div class="col-span-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Main Cover Photo</label>
-                            <div class="w-full md:w-1/3">
-                                <div class="relative group rounded-xl overflow-hidden aspect-video border-2 border-secondary bg-slate-100 shadow-md">
-                                    <img src="<?php echo BASE_URL . '/' . htmlspecialchars($coverImage['image_path']); ?>" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                        <button type="submit" name="delete_img_id" value="<?php echo $coverImage['id']; ?>" class="bg-red-500 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg" onclick="return confirm('Delete cover photo?')">
-                                            <i class="fa-solid fa-trash-can text-sm"></i>
-                                        </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                        <!-- Update Cover Photo -->
+                        <div class="col-span-2 md:col-span-1">
+                            <label class="block text-sm font-medium text-slate-700 mb-3">Update Main Cover Photo</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Current -->
+                                <div>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 mb-2 tracking-wider">Current Cover</p>
+                                    <?php if($coverImage): ?>
+                                        <div class="relative aspect-video rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                                            <img src="<?php echo BASE_URL . '/' . htmlspecialchars($coverImage['image_path']); ?>" class="w-full h-full object-cover">
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="aspect-video bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                                            No cover set
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <!-- Upload New -->
+                                <div>
+                                    <p class="text-[10px] uppercase font-bold text-secondary mb-2 tracking-wider">Select New Cover</p>
+                                    <div class="border-2 border-dashed border-secondary/20 rounded-xl p-4 text-center hover:bg-secondary/5 transition cursor-pointer relative bg-secondary/5 aspect-video flex flex-col items-center justify-center">
+                                        <input type="file" name="cover_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onchange="previewCoverImage(this)">
+                                        <div id="cover-preview-placeholder">
+                                            <i class="fa-solid fa-cloud-arrow-up text-xl text-secondary mb-1"></i>
+                                            <p class="text-[10px] font-bold text-slate-600">Click to Upload</p>
+                                        </div>
+                                        <div id="cover-preview-container" class="hidden w-full h-full">
+                                            <img id="cover-preview" src="#" class="w-full h-full object-cover rounded-lg border border-white">
+                                        </div>
                                     </div>
-                                    <div class="absolute top-2 left-2 bg-secondary text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-lg">Current Cover</div>
                                 </div>
                             </div>
                         </div>
-                        <?php endif; ?>
+
+                        <!-- Gallery Upload -->
+                        <div class="col-span-2 md:col-span-1">
+                            <label class="block text-sm font-medium text-slate-700 mb-3">Add to Gallery Images</label>
+                            <div id="image-preview-container" class="grid grid-cols-3 gap-2 mb-4 hidden"></div>
+                            <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:bg-slate-50 transition cursor-pointer relative bg-slate-50 aspect-video flex flex-col items-center justify-center">
+                                <input type="file" name="images[]" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onchange="previewImages(this)">
+                                <i class="fa-solid fa-images text-xl text-slate-400 mb-1"></i>
+                                <p class="text-[10px] font-bold text-slate-600">Add Gallery Photos</p>
+                            </div>
+                        </div>
 
                          <!-- Existing Gallery Images -->
                         <?php if(!empty($galleryImages)): ?>
@@ -983,6 +997,25 @@ function addFloorPlan() {
 
 <script>
 let selectedFiles = new DataTransfer();
+
+function previewCoverImage(input) {
+    const placeholder = document.getElementById('cover-preview-placeholder');
+    const container = document.getElementById('cover-preview-container');
+    const preview = document.getElementById('cover-preview');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            placeholder.classList.add('hidden');
+            container.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        placeholder.classList.remove('hidden');
+        container.classList.add('hidden');
+    }
+}
 
 function previewImages(input) {
     const container = document.getElementById('image-preview-container');
