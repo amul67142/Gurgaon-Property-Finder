@@ -270,80 +270,91 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 relative z-10">
-                    <?php foreach ($featured as $prop): 
-                        $imagePath = get_property_cover($prop['id'], $pdo);
-                        $sImg = get_seller_logo($prop);
-                    ?>
-                        <div class="bg-white rounded-2xl overflow-hidden border-2 border-secondary/20 shadow-xl shadow-secondary/5 hover:shadow-secondary/20 transition-all duration-500 group relative flex flex-col h-full bg-gradient-to-b from-white to-secondary/[0.02]" data-aos="fade-up">
-                            <!-- Premium Badge -->
-                            <div class="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-secondary text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg animate-pulse-slow">
-                                <i class="fa-solid fa-crown"></i> Premium
-                            </div>
+                <div class="relative z-10" data-aos="fade-up">
+                    <div class="swiper premiumSwiper pb-16">
+                        <div class="swiper-wrapper">
+                            <?php foreach ($featured as $prop): 
+                                $imagePath = get_property_cover($prop['id'], $pdo);
+                                $sImg = get_seller_logo($prop);
+                            ?>
+                                <div class="swiper-slide h-auto">
+                                    <div class="bg-white rounded-2xl overflow-hidden border-2 border-secondary/20 shadow-xl shadow-secondary/5 hover:shadow-secondary/20 transition-all duration-500 group relative flex flex-col h-full bg-gradient-to-b from-white to-secondary/[0.02]">
+                                        <!-- Premium Badge -->
+                                        <div class="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-secondary text-white px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg animate-pulse-slow">
+                                            <i class="fa-solid fa-crown"></i> Premium
+                                        </div>
 
-                            <div class="relative overflow-hidden h-56">
-                                <img src="<?php echo htmlspecialchars($imagePath); ?>" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                
-                                <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-800 border border-slate-100 z-10 rounded">
-                                    <?php echo str_replace('_', ' ', $prop['status']); ?>
-                                </div>
-
-                                <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 group/seller">
-                                    <div class="bg-white/95 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-lg opacity-0 -translate-x-2 group-hover/seller:opacity-100 group-hover/seller:translate-x-0 transition-all duration-300 invisible group-hover/seller:visible border border-secondary/10">
-                                        <p class="text-[9px] font-bold text-slate-800 whitespace-nowrap"><?php echo htmlspecialchars($prop['ad_broker_name'] ?: ($prop['broker_name'] ?: 'Seller')); ?></p>
-                                    </div>
-                                    <div class="w-9 h-9 rounded-full border-2 border-secondary/30 shadow-xl overflow-hidden bg-white group-hover:border-secondary transition-colors">
-                                        <?php if (!empty($sImg)): ?>
-                                            <img src="<?php echo htmlspecialchars($sImg); ?>" class="w-full h-full object-cover">
-                                        <?php else: ?>
-                                            <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-300 text-[10px]">
-                                                <i class="fa-solid fa-user"></i>
+                                        <div class="relative overflow-hidden h-56">
+                                            <img src="<?php echo htmlspecialchars($imagePath); ?>" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            
+                                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-800 border border-slate-100 z-10 rounded">
+                                                <?php echo str_replace('_', ' ', $prop['status']); ?>
                                             </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="p-6 flex-1 flex flex-col">
-                                <div class="flex-1">
-                                    <h3 class="text-xl font-bold font-display text-slate-900 mb-2 line-clamp-1 group-hover:text-secondary transition-colors duration-300">
-                                        <?php echo htmlspecialchars($prop['title']); ?>
-                                    </h3>
-                                    <div class="flex items-center gap-1.5 text-slate-400 text-xs mb-4 font-medium">
-                                        <i class="fa-solid fa-location-dot text-secondary/60"></i>
-                                        <?php echo htmlspecialchars($prop['location']); ?>
-                                    </div>
-                                    
-                                    <div class="flex items-center gap-3 mb-6 p-3 bg-slate-50 rounded-xl border border-slate-100 group-hover:bg-white group-hover:border-secondary/20 transition-all">
-                                        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-slate-100">
-                                             <?php if (!empty($sImg)): ?>
-                                                 <img src="<?php echo htmlspecialchars($sImg); ?>" class="w-full h-full object-cover">
-                                             <?php else: ?>
-                                                 <i class="fa-solid fa-user text-slate-400 text-[10px]"></i>
-                                             <?php endif; ?>
+                                            <div class="absolute bottom-4 right-4 z-20 flex items-center gap-2 group/seller">
+                                                <div class="bg-white/95 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-lg opacity-0 -translate-x-2 group-hover/seller:opacity-100 group-hover/seller:translate-x-0 transition-all duration-300 invisible group-hover/seller:visible border border-secondary/10">
+                                                    <p class="text-[9px] font-bold text-slate-800 whitespace-nowrap"><?php echo htmlspecialchars($prop['ad_broker_name'] ?: ($prop['broker_name'] ?: 'Seller')); ?></p>
+                                                </div>
+                                                <div class="w-9 h-9 rounded-full border-2 border-secondary/30 shadow-xl overflow-hidden bg-white group-hover:border-secondary transition-colors">
+                                                    <?php if (!empty($sImg)): ?>
+                                                        <img src="<?php echo htmlspecialchars($sImg); ?>" class="w-full h-full object-cover">
+                                                    <?php else: ?>
+                                                        <div class="w-full h-full flex items-center justify-center bg-slate-50 text-slate-300 text-[10px]">
+                                                            <i class="fa-solid fa-user"></i>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 class="text-[10px] font-bold text-slate-800 leading-tight"><?php echo htmlspecialchars($prop['ad_broker_name'] ?: ($prop['broker_name'] ?: 'Seller')); ?></h4>
-                                            <span class="text-[8px] uppercase font-bold text-secondary tracking-widest block"><?php echo htmlspecialchars($prop['ad_broker_type'] ?: ($prop['seller_type'] ?: 'Premium Broker')); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                                     <div>
-                                         <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-0.5">Starting From</p>
-                                         <p class="text-secondary font-black text-2xl">
-                                            <?php echo formatPrice($prop['price']); ?>
-                                         </p>
-                                     </div>
-                                     <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
-                                         Details <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
-                                     </a>
+                                        <div class="p-6 flex-1 flex flex-col">
+                                            <div class="flex-1">
+                                                <h3 class="text-xl font-bold font-display text-slate-900 mb-2 line-clamp-1 group-hover:text-secondary transition-colors duration-300">
+                                                    <?php echo htmlspecialchars($prop['title']); ?>
+                                                </h3>
+                                                <div class="flex items-center gap-1.5 text-slate-400 text-xs mb-4 font-medium">
+                                                    <i class="fa-solid fa-location-dot text-secondary/60"></i>
+                                                    <?php echo htmlspecialchars($prop['location']); ?>
+                                                </div>
+                                                
+                                                <div class="flex items-center gap-3 mb-6 p-3 bg-slate-50 rounded-xl border border-slate-100 group-hover:bg-white group-hover:border-secondary/20 transition-all">
+                                                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-slate-100">
+                                                         <?php if (!empty($sImg)): ?>
+                                                             <img src="<?php echo htmlspecialchars($sImg); ?>" class="w-full h-full object-cover">
+                                                         <?php else: ?>
+                                                             <i class="fa-solid fa-user text-slate-400 text-[10px]"></i>
+                                                         <?php endif; ?>
+                                                    </div>
+                                                    <div>
+                                                        <h4 class="text-[10px] font-bold text-slate-800 leading-tight"><?php echo htmlspecialchars($prop['ad_broker_name'] ?: ($prop['broker_name'] ?: 'Seller')); ?></h4>
+                                                        <span class="text-[8px] uppercase font-bold text-secondary tracking-widest block"><?php echo htmlspecialchars($prop['ad_broker_type'] ?: ($prop['seller_type'] ?: 'Premium Broker')); ?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                                 <div>
+                                                     <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-0.5">Starting From</p>
+                                                     <p class="text-secondary font-black text-2xl">
+                                                        <?php echo formatPrice($prop['price']); ?>
+                                                     </p>
+                                                 </div>
+                                                 <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
+                                                     Details <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
+                                                 </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endforeach; ?>
                         </div>
-                    <?php endforeach; ?>
+                        <!-- Navigation -->
+                        <div class="swiper-button-next !text-secondary !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-xl"></div>
+                        <div class="swiper-button-prev !text-secondary !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-xl"></div>
+                        <!-- Pagination -->
+                        <div class="swiper-pagination premium-pagination"></div>
+                    </div>
                 </div>
             <?php endif;
 
@@ -381,44 +392,55 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php if (count($others) > 0): ?>
-                    <?php foreach ($others as $prop): 
-                        $imagePath = get_property_cover($prop['id'], $pdo);
-                        $sImg = get_seller_logo($prop);
-                    ?>
-                        <div class="bg-white/95 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2 transition-all duration-500 group flex flex-col h-full" data-aos="fade-up">
-                            <div class="relative overflow-hidden h-48">
-                                <img src="<?php echo htmlspecialchars($imagePath); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
-                                <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white border border-white/10 z-10 rounded">
-                                    <?php echo str_replace('_', ' ', $prop['status']); ?>
+            <div class="relative z-10" data-aos="fade-up">
+                <div class="swiper listingsSwiper pb-16">
+                    <div class="swiper-wrapper">
+                        <?php if (count($others) > 0): ?>
+                            <?php foreach ($others as $prop): 
+                                $imagePath = get_property_cover($prop['id'], $pdo);
+                                $sImg = get_seller_logo($prop);
+                            ?>
+                                <div class="swiper-slide h-auto">
+                                    <div class="bg-white/95 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-500 group flex flex-col h-full">
+                                        <div class="relative overflow-hidden h-48">
+                                            <img src="<?php echo htmlspecialchars($imagePath); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+                                            <div class="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-md px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white border border-white/10 z-10 rounded">
+                                                <?php echo str_replace('_', ' ', $prop['status']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="p-5 flex-1 flex flex-col bg-white">
+                                            <h3 class="text-lg font-bold font-display text-slate-900 mb-1 line-clamp-1 group-hover:text-cyan-600 transition">
+                                                <?php echo htmlspecialchars($prop['title']); ?>
+                                            </h3>
+                                            <div class="flex items-center gap-1.5 text-slate-500 text-xs mb-4 font-medium">
+                                                <i class="fa-solid fa-map-pin text-slate-400"></i>
+                                                <?php echo htmlspecialchars($prop['location']); ?>
+                                            </div>
+                                            
+                                            <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
+                                                 <p class="text-slate-900 font-bold text-lg">
+                                                    <?php echo formatPrice($prop['price']); ?>
+                                                 </p>
+                                                 <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
+                                                     View Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                                 </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="swiper-slide text-center py-16">
+                                <p class="text-slate-400 text-sm">No properties found.</p>
                             </div>
-                            <div class="p-5 flex-1 flex flex-col bg-white">
-                                <h3 class="text-lg font-bold font-display text-slate-900 mb-1 line-clamp-1 group-hover:text-cyan-600 transition">
-                                    <?php echo htmlspecialchars($prop['title']); ?>
-                                </h3>
-                                <div class="flex items-center gap-1.5 text-slate-500 text-xs mb-4 font-medium">
-                                    <i class="fa-solid fa-map-pin text-slate-400"></i>
-                                    <?php echo htmlspecialchars($prop['location']); ?>
-                                </div>
-                                
-                                <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-                                     <p class="text-slate-900 font-bold text-lg">
-                                        <?php echo formatPrice($prop['price']); ?>
-                                     </p>
-                                     <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
-                                         View Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                                     </a>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="col-span-3 text-center py-16">
-                        <p class="text-slate-400 text-sm">No properties found.</p>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
+                    <!-- Navigation -->
+                    <div class="swiper-button-next !text-cyan-400 !w-10 !h-10 !bg-slate-900/50 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-slate-900 transition-all shadow-xl"></div>
+                    <div class="swiper-button-prev !text-cyan-400 !w-10 !h-10 !bg-slate-900/50 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-slate-900 transition-all shadow-xl"></div>
+                    <!-- Pagination -->
+                    <div class="swiper-pagination listings-pagination"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -485,7 +507,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
 <script>
     // Initialize Swiper
     document.addEventListener('DOMContentLoaded', function() {
-        const swiper = new Swiper('.bannerSwiper', {
+        const bannerSwiper = new Swiper('.bannerSwiper', {
             slidesPerView: 1,
             spaceBetween: 20,
             loop: true,
@@ -497,13 +519,47 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 el: '.swiper-pagination',
                 clickable: true,
                 dynamicBullets: true,
+            }
+        });
+
+        const premiumSwiper = new Swiper('.premiumSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 24,
+            pagination: {
+                el: '.premium-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.premiumSwiper .swiper-button-next',
+                prevEl: '.premiumSwiper .swiper-button-prev',
             },
             breakpoints: {
-                640: {
-                    slidesPerView: 1,
-                },
                 768: {
-                    slidesPerView: 1, // Keep 1 for big banners, or 2 if cards
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                },
+            }
+        });
+
+        const listingsSwiper = new Swiper('.listingsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 24,
+            pagination: {
+                el: '.listings-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.listingsSwiper .swiper-button-next',
+                prevEl: '.listingsSwiper .swiper-button-prev',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
                 },
             }
         });
