@@ -36,9 +36,20 @@ try {
     $id = $property['id'];
     
     // Fetch Images
-    $images = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC");
-    $images->execute([$id]);
-    $images = $images->fetchAll();
+    $imgStmt = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC");
+    $imgStmt->execute([$id]);
+    $allImages = $imgStmt->fetchAll();
+
+    $coverImage = null;
+    $galleryImages = [];
+    foreach ($allImages as $img) {
+        if ($img['is_cover']) {
+            if (!$coverImage) $coverImage = $img;
+            else $galleryImages[] = $img; // Fallback for multiple covers (shouldn't happen)
+        } else {
+            $galleryImages[] = $img;
+        }
+    }
 
     // Fetch Amenities
     $amenities = $pdo->prepare("SELECT a.name, a.icon FROM amenities a 
@@ -68,7 +79,7 @@ try {
     $relatedProperties = $relatedStmt->fetchAll();
 
     // Determine Hero Image
-    $heroImage = !empty($images) ? $images[0]['image_path'] : '/assets/images/hero-bg.jpg';
+    $heroImage = $coverImage ? $coverImage['image_path'] : (!empty($galleryImages) ? $galleryImages[0]['image_path'] : '/assets/images/hero-bg.jpg');
     if (strpos($heroImage, 'http') === false) {
         $heroImage = BASE_URL . '/' . ltrim($heroImage, '/');
     }
@@ -507,10 +518,10 @@ try {
             </div>
          </div>
 
-         <?php if (count($images) > 0): ?>
+         <?php if (count($galleryImages) > 0): ?>
             <div class="swiper gallery-slider overflow-hidden rounded-[30px]">
                 <div class="swiper-wrapper">
-                    <?php foreach($images as $i => $img): 
+                    <?php foreach($galleryImages as $i => $img): 
                          $imgSrc = $img['image_path'];
                          if (strpos($imgSrc, 'http') === false) $imgSrc = BASE_URL . '/' . ltrim($imgSrc, '/');
                     ?>
@@ -522,7 +533,7 @@ try {
                 </div>
             </div>
          <?php else: ?>
-            <p class="text-gray-400">No images available in gallery.</p>
+            <p class="text-gray-400">No additional images available in gallery.</p>
          <?php endif; ?>
     </div>
 </div>

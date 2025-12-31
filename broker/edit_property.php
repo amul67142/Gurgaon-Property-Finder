@@ -61,7 +61,18 @@ $currentFloorPlans = $fpStmt->fetchAll();
 // Fetch Property Images (Gallery)
 $imgStmt = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC, id ASC");
 $imgStmt->execute([$id]);
-$currentImages = $imgStmt->fetchAll();
+$allImages = $imgStmt->fetchAll();
+
+$coverImage = null;
+$galleryImages = [];
+foreach ($allImages as $img) {
+    if ($img['is_cover']) {
+        if (!$coverImage) $coverImage = $img;
+        else $galleryImages[] = $img;
+    } else {
+        $galleryImages[] = $img;
+    }
+}
 
 $allAmenities = $pdo->query("SELECT * FROM amenities ORDER BY name ASC")->fetchAll();
 
@@ -678,28 +689,41 @@ if (!$isAjax) {
                             </div>
                         </div>
 
-                         <!-- Existing Gallery Images -->
-                        <?php if(!empty($currentImages)): ?>
+                         <!-- Cover Image Section -->
+                        <?php if($coverImage): ?>
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Current Gallery</label>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Main Cover Photo</label>
+                            <div class="w-full md:w-1/3">
+                                <div class="relative group rounded-xl overflow-hidden aspect-video border-2 border-secondary bg-slate-100 shadow-md">
+                                    <img src="<?php echo BASE_URL . '/' . htmlspecialchars($coverImage['image_path']); ?>" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                        <button type="submit" name="delete_img_id" value="<?php echo $coverImage['id']; ?>" class="bg-red-500 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg" onclick="return confirm('Delete cover photo?')">
+                                            <i class="fa-solid fa-trash-can text-sm"></i>
+                                        </button>
+                                    </div>
+                                    <div class="absolute top-2 left-2 bg-secondary text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-lg">Current Cover</div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                         <!-- Existing Gallery Images -->
+                        <?php if(!empty($galleryImages)): ?>
+                        <div class="col-span-2 mt-4">
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Gallery Images (Excludes Cover)</label>
                             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                <?php foreach($currentImages as $img): ?>
+                                <?php foreach($galleryImages as $img): ?>
                                 <div class="relative group rounded-xl overflow-hidden aspect-square border border-slate-200 bg-slate-100">
                                     <img src="<?php echo BASE_URL . '/' . htmlspecialchars($img['image_path']); ?>" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-3">
-                                        <?php if(!$img['is_cover']): ?>
-                                            <button type="submit" name="set_cover_id" value="<?php echo $img['id']; ?>" class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold py-1.5 px-3 rounded-full border border-white/50 backdrop-blur-sm transition">
-                                                Set as Cover
-                                            </button>
-                                        <?php endif; ?>
+                                        <button type="submit" name="set_cover_id" value="<?php echo $img['id']; ?>" class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold py-1.5 px-3 rounded-full border border-white/50 backdrop-blur-sm transition">
+                                            Set as Cover
+                                        </button>
                                         
                                         <button type="submit" name="delete_img_id" value="<?php echo $img['id']; ?>" class="bg-red-500 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg scale-90 group-hover:scale-100 duration-300" onclick="return confirm('Delete this image?')">
                                             <i class="fa-solid fa-trash-can text-sm"></i>
                                         </button>
                                     </div>
-                                    <?php if($img['is_cover']): ?>
-                                    <div class="absolute top-2 left-2 bg-blue-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-lg backdrop-blur-sm">Cover Image</div>
-                                    <?php endif; ?>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
