@@ -199,6 +199,9 @@ if (!$isAjax) {
 ?>
 <div class="flex min-h-screen bg-slate-50">
     <!-- Sidebar -->
+    <?php if (isAdmin()): ?>
+        <?php include __DIR__ . '/../includes/admin_sidebar.php'; ?>
+    <?php else: ?>
     <aside class="w-64 bg-slate-900 text-white fixed top-0 bottom-0 left-0 overflow-y-auto z-30 hidden lg:block">
         <div class="p-6">
             <a href="<?php echo BASE_URL; ?>/index.php" class="mb-10 block px-2">
@@ -215,6 +218,7 @@ if (!$isAjax) {
             </nav>
         </div>
     </aside>
+    <?php endif; ?>
 
     <!-- Main Content -->
     <main class="flex-1 lg:ml-64 p-4 md:p-8">

@@ -7,6 +7,8 @@ require_once __DIR__ . '/includes/functions.php';
 if (isset($_SESSION['user_id'])) {
     if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
         redirect(BASE_URL . '/admin/dashboard.php');
+    } elseif (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'broker') {
+        redirect(BASE_URL . '/broker/dashboard.php');
     } else {
         redirect(BASE_URL . '/index.php');
     }
