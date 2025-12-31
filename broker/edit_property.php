@@ -267,17 +267,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle Image Deletion
     if (isset($_POST['delete_img_id'])) {
         $delImgId = intval($_POST['delete_img_id']);
-        $stmt = $pdo->prepare("SELECT image_path FROM property_images WHERE id = ? AND property_id = ?");
+        $stmt = $pdo->prepare("SELECT image_path, is_cover FROM property_images WHERE id = ? AND property_id = ?");
         $stmt->execute([$delImgId, $id]);
-        $imgToDelete = $stmt->fetchColumn();
+        $imgData = $stmt->fetch();
         
-        if ($imgToDelete) {
-             $pdo->prepare("DELETE FROM property_images WHERE id = ?")->execute([$delImgId]);
+        if ($imgData) {
+            $pdo->prepare("DELETE FROM property_images WHERE id = ?")->execute([$delImgId]);
+            
+            // If the deleted image was the cover, pick another one
+            if ($imgData['is_cover']) {
+                $nextImg = $pdo->prepare("SELECT id FROM property_images WHERE property_id = ? ORDER BY id ASC LIMIT 1");
+                $nextImg->execute([$id]);
+                $nextId = $nextImg->fetchColumn();
+                if ($nextId) {
+                    $pdo->prepare("UPDATE property_images SET is_cover = 1 WHERE id = ?")->execute([$nextId]);
+                }
+            }
+
             $imgStmt = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC, id ASC");
             $imgStmt->execute([$id]);
             $currentImages = $imgStmt->fetchAll();
             $success = "Image deleted successfully.";
         }
+    }
+
+    // Handle Set Cover
+    if (isset($_POST['set_cover_id'])) {
+        $setCoverId = intval($_POST['set_cover_id']);
+        // Remove existing cover
+        $pdo->prepare("UPDATE property_images SET is_cover = 0 WHERE property_id = ?")->execute([$id]);
+        // Set new cover
+        $pdo->prepare("UPDATE property_images SET is_cover = 1 WHERE id = ? AND property_id = ?")->execute([$setCoverId, $id]);
+        
+        $imgStmt = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC, id ASC");
+        $imgStmt->execute([$id]);
+        $currentImages = $imgStmt->fetchAll();
+        $success = "Cover image updated.";
     }
 
     // Handle Section Image Deletion
@@ -661,18 +686,19 @@ if (!$isAjax) {
                                 <?php foreach($currentImages as $img): ?>
                                 <div class="relative group rounded-xl overflow-hidden aspect-square border border-slate-200 bg-slate-100">
                                     <img src="<?php echo BASE_URL . '/' . htmlspecialchars($img['image_path']); ?>" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
-                                        <?php if($img['is_cover']): ?>
-                                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Cover Image</span>
-                                        <?php else: ?>
-                                            <!-- Handle Set Cover (Future) or Delete -->
-                                            <button type="submit" name="delete_img_id" value="<?php echo $img['id']; ?>" class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg scale-90 group-hover:scale-100 duration-300" onclick="return confirm('Delete this image?')">
-                                                <i class="fa-solid fa-xmark"></i>
+                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center gap-3">
+                                        <?php if(!$img['is_cover']): ?>
+                                            <button type="submit" name="set_cover_id" value="<?php echo $img['id']; ?>" class="bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold py-1.5 px-3 rounded-full border border-white/50 backdrop-blur-sm transition">
+                                                Set as Cover
                                             </button>
                                         <?php endif; ?>
+                                        
+                                        <button type="submit" name="delete_img_id" value="<?php echo $img['id']; ?>" class="bg-red-500 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg scale-90 group-hover:scale-100 duration-300" onclick="return confirm('Delete this image?')">
+                                            <i class="fa-solid fa-trash-can text-sm"></i>
+                                        </button>
                                     </div>
                                     <?php if($img['is_cover']): ?>
-                                    <div class="absolute top-2 left-2 bg-blue-500 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded shadow-sm">Cover</div>
+                                    <div class="absolute top-2 left-2 bg-blue-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded shadow-lg backdrop-blur-sm">Cover Image</div>
                                     <?php endif; ?>
                                 </div>
                                 <?php endforeach; ?>
