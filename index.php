@@ -265,6 +265,9 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                         <h2 class="text-4xl font-bold text-white mt-2 font-display uppercase tracking-tight">Premium Projects</h2>
                         <div class="w-24 h-1 bg-gradient-to-r from-secondary to-transparent mt-3"></div>
                     </div>
+                    <a href="properties.php?featured=1" class="hidden md:flex items-center gap-2 text-slate-300 hover:text-secondary transition text-sm font-medium group">
+                        View All <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform text-xs"></i>
+                    </a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 relative z-10">

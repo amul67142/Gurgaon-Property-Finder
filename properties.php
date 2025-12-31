@@ -28,6 +28,9 @@ if (!empty($_GET['max_price'])) {
     $sql .= " AND price <= ?";
     $params[] = $_GET['max_price'];
 }
+if (isset($_GET['featured']) && $_GET['featured'] == '1') {
+    $sql .= " AND is_featured = 1";
+}
 $sql .= " ORDER BY created_at DESC";
 
 try {
