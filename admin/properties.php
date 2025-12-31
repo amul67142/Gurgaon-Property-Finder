@@ -95,7 +95,7 @@ $properties = $stmt->fetchAll();
                                             <span class="text-xs text-slate-400"><?php echo htmlspecialchars($prop['broker_email']); ?></span>
                                         </div>
                                     </td>
-                                    <td class="py-4 px-4 text-slate-600">$<?php echo number_format($prop['price']); ?></td>
+                                    <td class="py-4 px-4 text-slate-600"><?php echo formatPrice($prop['price']); ?></td>
                                     <td class="py-4 px-4">
                                         <?php if ($prop['is_approved']): ?>
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600">

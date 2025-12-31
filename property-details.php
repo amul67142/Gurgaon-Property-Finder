@@ -757,10 +757,7 @@ function closeReportModal() {
                         <div>
                             <span class="block text-xs text-gray-400 font-bold uppercase tracking-wider">Price</span>
                             <span class="font-bold text-slate-800">
-                                <?php 
-                                    $pPrice = $rp['price'];
-                                    echo ($pPrice >= 10000000) ? number_format($pPrice/10000000, 2).' Cr' : number_format($pPrice/100000, 2).' L';
-                                ?><span class="text-[10px] text-slate-400 font-normal ml-0.5">onwards</span>
+                                <?php echo formatPrice($rp['price']); ?><span class="text-[10px] text-slate-400 font-normal ml-0.5">onwards</span>
                             </span>
                         </div>
                         <div class="text-right">

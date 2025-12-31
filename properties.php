@@ -196,11 +196,7 @@ try {
                                          <div>
                                              <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Starting From</p>
                                              <p class="text-secondary font-black text-2xl">
-                                                ₹<?php 
-                                                    $price = $prop['price'];
-                                                    if ($price >= 10000000) echo number_format($price / 10000000, 2) . ' Cr';
-                                                    else echo number_format($price / 100000, 2) . ' L';
-                                                ?>
+                                                <?php echo formatPrice($prop['price']); ?>
                                              </p>
                                          </div>
                                          <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
@@ -208,11 +204,7 @@ try {
                                          </a>
                                          <?php else: ?>
                                          <p class="text-slate-900 font-bold text-lg">
-                                            ₹<?php 
-                                                $price = $prop['price'];
-                                                if ($price >= 10000000) echo number_format($price / 10000000, 2) . ' Cr';
-                                                else echo number_format($price / 100000, 2) . ' L';
-                                            ?>
+                                            <?php echo formatPrice($prop['price']); ?>
                                          </p>
                                          <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                          <?php endif; ?>
@@ -221,11 +213,7 @@ try {
                                     <!-- Standard Layout: Price at bottom -->
                                     <div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
                                          <p class="text-slate-900 font-bold text-lg">
-                                            ₹<?php 
-                                                $price = $prop['price'];
-                                                if ($price >= 10000000) echo number_format($price / 10000000, 2) . ' Cr';
-                                                else echo number_format($price / 100000, 2) . ' L';
-                                            ?>
+                                            <?php echo formatPrice($prop['price']); ?>
                                          </p>
                                          <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                     </div>
