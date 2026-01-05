@@ -29,17 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['name'];
-                $_SESSION['user_role'] = $user['role'];
-                $_SESSION['user_email'] = $user['email'];
-
-                if ($user['role'] === 'admin') {
-                    redirect(BASE_URL . '/admin/dashboard.php');
-                } elseif ($user['role'] === 'broker') {
-                    redirect(BASE_URL . '/broker/dashboard.php');
+                // Check if verified
+                if ($user['is_verified'] == 0) {
+                    $error = 'Your account is not verified. <strong>Please check your email</strong> for the verification link.';
                 } else {
-                    redirect(BASE_URL . '/index.php');
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['name'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $_SESSION['user_email'] = $user['email'];
+
+                    if ($user['role'] === 'admin') {
+                        redirect(BASE_URL . '/admin/dashboard.php');
+                    } elseif ($user['role'] === 'broker') {
+                        redirect(BASE_URL . '/broker/dashboard.php');
+                    } else {
+                        redirect(BASE_URL . '/index.php');
+                    }
                 }
             } else {
                 $error = 'Invalid email or password.';
@@ -64,6 +69,26 @@ require_once __DIR__ . '/includes/header.php';
             <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm flex items-center gap-3 border border-red-100">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error']) && $_GET['error'] === 'device_unauthorized'): ?>
+            <div class="bg-amber-50 text-amber-600 p-4 rounded-xl mb-6 text-sm flex items-center gap-3 border border-amber-100">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <p class="font-bold">Device Not Authorized</p>
+                    <p>Admin access requires an authorized device. Use your secret link to authorize this browser.</p>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['msg']) && $_GET['msg'] === 'device_authorized'): ?>
+            <div class="bg-green-50 text-green-600 p-4 rounded-xl mb-6 text-sm flex items-center gap-3 border border-green-100">
+                <i class="fa-solid fa-circle-check"></i>
+                <div>
+                    <p class="font-bold">Device Authorized!</p>
+                    <p>This browser is now authorized for admin access. You can now login with your password.</p>
+                </div>
             </div>
         <?php endif; ?>
 

@@ -21,7 +21,11 @@ function isLoggedIn() {
 }
 
 function isAdmin() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    $hasRole = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+    if (!$hasRole) return false;
+    
+    // Check for Device Token
+    return validateAdminToken();
 }
 
 function isBroker() {
@@ -36,8 +40,25 @@ function requireLogin() {
 
 function requireAdmin() {
     if (!isAdmin()) {
+        if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+            // Logged in as admin but device not authorized
+            redirect(BASE_URL . '/login.php?error=device_unauthorized');
+        }
         redirect(BASE_URL . '/index.php');
     }
+}
+
+/**
+ * Validate Admin Device Token
+ */
+function validateAdminToken() {
+    if (!isset($_COOKIE['admin_device_token'])) return false;
+    
+    $secret = defined('ADMIN_SECRET_KEY') ? ADMIN_SECRET_KEY : 'default_fallback_change_me';
+    $token = $_COOKIE['admin_device_token'];
+    
+    // The token is expected to be a hash of the secret
+    return hash_equals(hash('sha256', $secret), $token);
 }
 
 function requireBroker() {
@@ -48,21 +69,23 @@ function requireBroker() {
 
 /**
  * Send Mail Helper
- * Logs to assets/mail_logs.txt for local testing if mail() fails or environment is local
+ * On Live: Uses standard PHP mail()
+ * On Local/Fallback: Logs to logs/mail_logs.txt
  */
 function sendMail($to, $subject, $message) {
-    $headers = "From: Gurgaon Property Finder <noreply@gurgaonproperty.in>\r\n";
-    $headers .= "Reply-To: noreply@gurgaonproperty.in\r\n";
+    $from = 'support@gurgaonpropertyfinder.com';
+    $headers = "From: Gurgaon Property Finder <$from>\r\n";
+    $headers .= "Reply-To: $from\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     
-    // Log for local development
+    // 1. Log locally first for debugging/development
     $logDir = __DIR__ . '/../logs/';
     if (!is_dir($logDir)) mkdir($logDir, 0777, true);
     
     $logContent = "--- [" . date('Y-m-d H:i:s') . "] ---\nTO: $to\nSUB: $subject\nMSG: $message\n------------------------\n\n";
     file_put_contents($logDir . 'mail_logs.txt', $logContent, FILE_APPEND);
     
-    // Attempt actual mail
+    // 2. Attempt actual mail sending on live server
     try {
         return @mail($to, $subject, $message, $headers);
     } catch (Exception $e) {

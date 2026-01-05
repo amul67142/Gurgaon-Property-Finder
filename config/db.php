@@ -1,6 +1,9 @@
 <?php
 // Database Configuration - AUTO ENVIRONMENT DETECTION
 // Automatically switches between local and production credentials
+if (file_exists(__DIR__ . '/secrets.php')) {
+    require_once __DIR__ . '/secrets.php';
+}
 
 // Detect environment based on hostname
 $isLocal = in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1', 'localhost:80', 'localhost:8080']);
