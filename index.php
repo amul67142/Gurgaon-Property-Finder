@@ -272,8 +272,12 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
 
                 <div class="relative group/swiper" data-aos="fade-up">
                     <!-- Navigation Arrows -->
-                    <div class="premium-next swiper-button-next !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-right-4 md:!-right-6 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
-                    <div class="premium-prev swiper-button-prev !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-left-4 md:!-left-6 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+                    <div class="premium-next swiper-button-next !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-right-2 md:!-right-6 !z-50 opacity-0 group-hover/swiper:opacity-100 flex items-center justify-center after:!content-none">
+                        <i class="fa-solid fa-chevron-right text-xl"></i>
+                    </div>
+                    <div class="premium-prev swiper-button-prev !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-left-2 md:!-left-6 !z-50 opacity-0 group-hover/swiper:opacity-100 flex items-center justify-center after:!content-none">
+                        <i class="fa-solid fa-chevron-left text-xl"></i>
+                    </div>
 
                     <div class="swiper premiumSwiper pb-16">
                         <div class="swiper-wrapper">
@@ -395,8 +399,12 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
 
             <div class="relative group/swiper" data-aos="fade-up">
                 <!-- Navigation Arrows -->
-                <div class="listings-next swiper-button-next !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-right-2 md:!-right-5 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
-                <div class="listings-prev swiper-button-prev !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-left-2 md:!-left-5 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+                <div class="listings-next swiper-button-next !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-right-2 md:!-right-5 !z-50 opacity-0 group-hover/swiper:opacity-100 flex items-center justify-center after:!content-none">
+                    <i class="fa-solid fa-chevron-right text-lg"></i>
+                </div>
+                <div class="listings-prev swiper-button-prev !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-left-2 md:!-left-5 !z-50 opacity-0 group-hover/swiper:opacity-100 flex items-center justify-center after:!content-none">
+                    <i class="fa-solid fa-chevron-left text-lg"></i>
+                </div>
 
                 <div class="swiper listingsSwiper pb-16">
                     <div class="swiper-wrapper">
