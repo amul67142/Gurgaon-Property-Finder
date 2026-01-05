@@ -104,7 +104,11 @@ $properties = $stmt->fetchAll();
                             <?php foreach ($properties as $prop): ?>
                                 <tr class="hover:bg-slate-50 transition">
                                     <td class="py-4 pl-6 text-slate-500">
-                                        <input type="number" name="sort_order[<?php echo $prop['id']; ?>]" value="<?php echo $prop['sort_order']; ?>" class="w-16 bg-slate-100 border-none rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:ring-2 focus:ring-secondary/50">
+                                        <?php if ($prop['is_featured']): ?>
+                                            <input type="number" name="sort_order[<?php echo $prop['id']; ?>]" value="<?php echo $prop['sort_order']; ?>" class="w-16 bg-slate-100 border-none rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:ring-2 focus:ring-secondary/50">
+                                        <?php else: ?>
+                                            <span class="text-slate-300 ml-4">—</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="py-4 px-4 font-medium text-slate-800"><?php echo htmlspecialchars($prop['title']); ?></td>
                                     <td class="py-4 px-4">
