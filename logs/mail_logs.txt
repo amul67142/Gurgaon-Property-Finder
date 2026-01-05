@@ -8,3 +8,20 @@ MSG: <h2>Password Reset Request</h2>
                         <p>If you didn't request this, please ignore this email.</p>
 ------------------------
 
+--- [2026-01-05 07:11:01] ---
+TO: amul67142@gmail.com
+SUB: Verify Your Gurgaon Property Finder Account
+MSG: 
+                        <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
+                            <h2 style='color: #333;'>Welcome to Gurgaon Property Finder!</h2>
+                            <p>Hi Amul sharma,</p>
+                            <p>Thank you for registering. Please click the button below to verify your email address and activate your account:</p>
+                            <a href='http://localhost/ggn/verify.php?token=5140840e4b31b64a45bf0b69ce0336ecbfc74394f2a67d9a9c7c0c57cdb556fb' style='display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;'>Verify Email Address</a>
+                            <p>Or copy and paste this link in your browser:</p>
+                            <p style='font-size: 12px; color: #666;'>http://localhost/ggn/verify.php?token=5140840e4b31b64a45bf0b69ce0336ecbfc74394f2a67d9a9c7c0c57cdb556fb</p>
+                            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+                            <p style='font-size: 11px; color: #999;'>If you didn't create an account, you can safely ignore this email.</p>
+                        </div>
+                    
+------------------------
+

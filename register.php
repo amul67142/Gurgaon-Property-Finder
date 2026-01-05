@@ -17,8 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Invalid role selected.';
     } else {
         try {
-            // Check if email or phone exists
-            $stmt = $pdo->prepare("SELECT id, email, phone FROM users WHERE email = ? OR phone = ?");
+            // Ensure database has verification_token and UNIQUE constraints (Dynamic Migration)
+            try {
+                $pdo->exec("ALTER TABLE users ADD COLUMN IF NOT EXISTS verification_token VARCHAR(255) NULL AFTER is_verified");
+                
+                // Add Unique Constraints
+                // Note: We use a try-catch for these specific lines in case they already exist
+                try { $pdo->exec("ALTER TABLE users ADD UNIQUE (email)"); } catch (Exception $e) {}
+                try { $pdo->exec("ALTER TABLE users ADD UNIQUE (phone)"); } catch (Exception $e) {}
+            } catch (PDOException $e) { /* DB structure might have issues, but continue */ }
+
+            // Check if email or phone exists (Case-insensitive for email)
+            $stmt = $pdo->prepare("SELECT id, email, phone FROM users WHERE LOWER(email) = LOWER(?) OR phone = ?");
             $stmt->execute([$email, $phone]);
             $existing = $stmt->fetch();
             
@@ -59,17 +69,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // Hash password
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                
-                // Insert user (is_verified = 1 by default now)
-                $stmt = $pdo->prepare("INSERT INTO users (name, email, password, phone, role, seller_type, profile_image, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, 1)");
-                $stmt->execute([$name, $email, $hashed_password, $phone, $role, $seller_type, $profile_image]);
-                
-                $success = 'Registration successful! You can now <a href="login.php" class="underline font-bold">login</a>.';
+                if (!$error) {
+                    // Hash password
+                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                    
+                    // Generate Verification Token
+                    $verification_token = bin2hex(random_bytes(32));
+
+                    // Insert user (is_verified = 0 for new signups)
+                    $stmt = $pdo->prepare("INSERT INTO users (name, email, password, phone, role, seller_type, profile_image, is_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)");
+                    $stmt->execute([$name, $email, $hashed_password, $phone, $role, $seller_type, $profile_image, $verification_token]);
+                    
+                    // Send Verification Email
+                    $verifyLink = BASE_URL . "/verify.php?token=" . $verification_token;
+                    $subject = "Verify Your Gurgaon Property Finder Account";
+                    $message = "
+                        <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
+                            <h2 style='color: #333;'>Welcome to Gurgaon Property Finder!</h2>
+                            <p>Hi $name,</p>
+                            <p>Thank you for registering. Please click the button below to verify your email address and activate your account:</p>
+                            <a href='$verifyLink' style='display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0;'>Verify Email Address</a>
+                            <p>Or copy and paste this link in your browser:</p>
+                            <p style='font-size: 12px; color: #666;'>$verifyLink</p>
+                            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+                            <p style='font-size: 11px; color: #999;'>If you didn't create an account, you can safely ignore this email.</p>
+                        </div>
+                    ";
+                    
+                    sendMail($email, $subject, $message);
+
+                    $success = 'Registration successful! <strong>Please check your email to verify your account</strong> before logging in.';
+                }
             }
         } catch (PDOException $e) {
-            $error = 'Database error (Ensure update_schema_v5.php was run): ' . $e->getMessage();
+            if ($e->getCode() == 23000) {
+                $error = 'Email or phone number already exists in our system.';
+            } else {
+                $error = 'Database error: ' . $e->getMessage();
+            }
         }
     }
 }
