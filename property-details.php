@@ -1,16 +1,14 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
+@session_start();
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
 
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) && !isset($_GET['slug'])) {
     redirect('properties.php');
 }
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
-
-if (!$id && !$slug) {
-    redirect('properties.php');
-}
 
 try {
     // Fetch Property
@@ -32,9 +30,13 @@ try {
 
     if (!$property) throw new Exception("Property not found");
     
-    // Ensure ID is set for subsequent queries if we fetched by slug
     $id = $property['id'];
-    
+
+    // SEO Variables for Header
+    $page_title = htmlspecialchars($property['title']) . " in " . htmlspecialchars($property['location']) . " | Gurgaon Property Finder";
+    $page_description = substr(strip_tags($property['description']), 0, 160) . "...";
+    $page_image = get_property_cover($id, $pdo);
+
     // Fetch Images
     $imgStmt = $pdo->prepare("SELECT * FROM property_images WHERE property_id = ? ORDER BY is_cover DESC");
     $imgStmt->execute([$id]);
