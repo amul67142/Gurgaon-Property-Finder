@@ -26,12 +26,6 @@ if (isset($_POST['action'])) {
             $stmt->execute([$id]);
             $success = "Property and associated images deleted successfully.";
         }
-    } elseif ($_POST['action'] === 'update_order' && isset($_POST['sort_order'])) {
-        foreach ($_POST['sort_order'] as $id => $order) {
-            $stmt = $pdo->prepare("UPDATE properties SET sort_order = ? WHERE id = ?");
-            $stmt->execute([intval($order), intval($id)]);
-        }
-        $success = "Display order updated successfully.";
     }
 }
 
@@ -77,39 +71,25 @@ $properties = $stmt->fetchAll();
             <div class="bg-green-50 text-green-600 p-4 rounded-xl mb-6 border border-green-100 flex items-center gap-3"><i class="fa-solid fa-check-circle"></i> <?php echo $success; ?></div>
         <?php endif; ?>
 
-        <form method="POST">
-            <input type="hidden" name="action" value="update_order">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Property Inventory</span>
-                    <button type="submit" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-secondary transition shadow-md shadow-slate-900/10">
-                        <i class="fa-solid fa-save mr-1"></i> Update Order
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
-                                <th class="py-4 pl-6 font-semibold">Priority</th>
-                                <th class="py-4 px-4 font-semibold">Title</th>
-                                <th class="py-4 px-4 font-semibold">Broker</th>
-                                <th class="py-4 px-4 font-semibold">Price</th>
-                                <th class="py-4 px-4 font-semibold">Status</th>
-                                <th class="py-4 px-4 font-semibold">Featured</th>
-                                <th class="py-4 pr-6 text-right font-semibold">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm divide-y divide-slate-100">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                            <th class="py-4 pl-6 font-semibold">ID</th>
+                            <th class="py-4 px-4 font-semibold">Title</th>
+                            <th class="py-4 px-4 font-semibold">Broker</th>
+                            <th class="py-4 px-4 font-semibold">Price</th>
+                            <th class="py-4 px-4 font-semibold">Status</th>
+                            <th class="py-4 px-4 font-semibold">Featured</th>
+                            <th class="py-4 pr-6 text-right font-semibold">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-100">
                         <?php if (count($properties) > 0): ?>
                             <?php foreach ($properties as $prop): ?>
                                 <tr class="hover:bg-slate-50 transition">
-                                    <td class="py-4 pl-6 text-slate-500">
-                                        <?php if ($prop['is_featured']): ?>
-                                            <input type="number" name="sort_order[<?php echo $prop['id']; ?>]" value="<?php echo $prop['sort_order']; ?>" class="w-16 bg-slate-100 border-none rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:ring-2 focus:ring-secondary/50">
-                                        <?php else: ?>
-                                            <span class="text-slate-300 ml-4">—</span>
-                                        <?php endif; ?>
-                                    </td>
+                                    <td class="py-4 pl-6 text-slate-500">#<?php echo $prop['id']; ?></td>
                                     <td class="py-4 px-4 font-medium text-slate-800"><?php echo htmlspecialchars($prop['title']); ?></td>
                                     <td class="py-4 px-4">
                                         <div class="flex flex-col">
@@ -192,7 +172,6 @@ $properties = $stmt->fetchAll();
                 </table>
             </div>
         </div>
-    </form>
 </main>
 </div>
 

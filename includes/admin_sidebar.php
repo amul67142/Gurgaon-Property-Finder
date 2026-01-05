@@ -19,6 +19,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a href="<?php echo BASE_URL; ?>/admin/properties.php" class="flex items-center gap-3 px-4 py-3 rounded-xl <?php echo $current_page == 'properties.php' ? 'bg-secondary text-white shadow-lg shadow-secondary/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white transition'; ?>">
                 <i class="fa-solid fa-building w-5"></i> Properties
             </a>
+            <a href="<?php echo BASE_URL; ?>/admin/featured_order.php" class="flex items-center gap-3 px-4 py-3 rounded-xl <?php echo $current_page == 'featured_order.php' ? 'bg-secondary text-white shadow-lg shadow-secondary/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white transition'; ?>">
+                <i class="fa-solid fa-star w-5"></i> Featured Order
+            </a>
             <a href="<?php echo BASE_URL; ?>/admin/leads.php" class="flex items-center gap-3 px-4 py-3 rounded-xl <?php echo $current_page == 'leads.php' ? 'bg-secondary text-white shadow-lg shadow-secondary/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white transition'; ?>">
                 <i class="fa-solid fa-users w-5"></i> Leads
             </a>
