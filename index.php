@@ -270,7 +270,11 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                     </a>
                 </div>
 
-                <div class="relative z-10" data-aos="fade-up">
+                <div class="relative group/swiper" data-aos="fade-up">
+                    <!-- Navigation Arrows -->
+                    <div class="premium-next swiper-button-next !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-right-4 md:!-right-6 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+                    <div class="premium-prev swiper-button-prev !text-secondary !w-12 !h-12 !bg-slate-800/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-2xl !-left-4 md:!-left-6 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+
                     <div class="swiper premiumSwiper pb-16">
                         <div class="swiper-wrapper">
                             <?php foreach ($featured as $prop): 
@@ -349,9 +353,6 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        <!-- Navigation -->
-                        <div class="swiper-button-next !text-secondary !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-xl"></div>
-                        <div class="swiper-button-prev !text-secondary !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 after:!text-xl hover:!bg-secondary hover:!text-white transition-all shadow-xl"></div>
                         <!-- Pagination -->
                         <div class="swiper-pagination premium-pagination"></div>
                     </div>
@@ -392,7 +393,11 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 </a>
             </div>
 
-            <div class="relative z-10" data-aos="fade-up">
+            <div class="relative group/swiper" data-aos="fade-up">
+                <!-- Navigation Arrows -->
+                <div class="listings-next swiper-button-next !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-right-2 md:!-right-5 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+                <div class="listings-prev swiper-button-prev !text-cyan-400 !w-10 !h-10 !bg-slate-900/80 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-white transition-all shadow-2xl !-left-2 md:!-left-5 !z-50 opacity-0 group-hover/swiper:opacity-100"></div>
+
                 <div class="swiper listingsSwiper pb-16">
                     <div class="swiper-wrapper">
                         <?php if (count($others) > 0): ?>
@@ -435,9 +440,6 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                             </div>
                         <?php endif; ?>
                     </div>
-                    <!-- Navigation -->
-                    <div class="swiper-button-next !text-cyan-400 !w-10 !h-10 !bg-slate-900/50 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-slate-900 transition-all shadow-xl"></div>
-                    <div class="swiper-button-prev !text-cyan-400 !w-10 !h-10 !bg-slate-900/50 !backdrop-blur-md !rounded-full !border !border-white/10 after:!text-lg hover:!bg-cyan-400 hover:!text-slate-900 transition-all shadow-xl"></div>
                     <!-- Pagination -->
                     <div class="swiper-pagination listings-pagination"></div>
                 </div>
@@ -530,8 +532,8 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 clickable: true,
             },
             navigation: {
-                nextEl: '.premiumSwiper .swiper-button-next',
-                prevEl: '.premiumSwiper .swiper-button-prev',
+                nextEl: '.premium-next',
+                prevEl: '.premium-prev',
             },
             breakpoints: {
                 768: {
@@ -551,8 +553,8 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                 clickable: true,
             },
             navigation: {
-                nextEl: '.listingsSwiper .swiper-button-next',
-                prevEl: '.listingsSwiper .swiper-button-prev',
+                nextEl: '.listings-next',
+                prevEl: '.listings-prev',
             },
             breakpoints: {
                 768: {
