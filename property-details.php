@@ -1,9 +1,7 @@
 <?php
-@session_start();
-require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/header.php';
 
-if (!isset($_GET['id']) && !isset($_GET['slug'])) {
+if (!isset($_GET['id'])) {
     redirect('properties.php');
 }
 
