@@ -1,7 +1,10 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
+// 1. Initialize dependencies early to set SEO tags BEFORE header
+@session_start();
+require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
 
-if (!isset($_GET['id'])) {
+if (!isset($_GET['id']) && !isset($_GET['slug'])) {
     redirect('properties.php');
 }
 
@@ -25,12 +28,11 @@ try {
     }
     
     $property = $stmt->fetch();
-
     if (!$property) throw new Exception("Property not found");
     
     $id = $property['id'];
 
-    // SEO Variables for Header
+    // Define SEO Variables for header.php
     $page_title = htmlspecialchars($property['title']) . " in " . htmlspecialchars($property['location']) . " | Gurgaon Property Finder";
     $page_description = substr(strip_tags($property['description']), 0, 160) . "...";
     $page_image = get_property_cover($id, $pdo);
@@ -45,7 +47,7 @@ try {
     foreach ($allImages as $img) {
         if ($img['is_cover']) {
             if (!$coverImage) $coverImage = $img;
-            else $galleryImages[] = $img; // Fallback for multiple covers (shouldn't happen)
+            else $galleryImages[] = $img;
         } else {
             $galleryImages[] = $img;
         }
@@ -68,8 +70,8 @@ try {
     $locationPoints = !empty($property['location_advantages']) ? explode(',', $property['location_advantages']) : [];
 
     // Fetch Related Projects (Same Location OR Similar Price +/- 20%)
-    $minPrice = $property['price'] * 0.8;
-    $maxPrice = $property['price'] * 1.2;
+    $minPrice = floatval($property['price']) * 0.8;
+    $maxPrice = floatval($property['price']) * 1.2;
     $relatedStmt = $pdo->prepare("SELECT p.*, u.name as broker_name, u.seller_type, u.profile_image 
                                   FROM properties p 
                                   LEFT JOIN users u ON p.broker_id = u.id 
@@ -85,10 +87,37 @@ try {
     }
 
 } catch (Exception $e) {
-    // Error handling
-    echo '<div class="bg-black min-h-screen text-white flex items-center justify-center">Property not found.</div>';
-    exit();
+    redirect('properties.php');
 }
+
+// 2. Include Header (Now it has the SEO variables it needs)
+require_once __DIR__ . '/includes/header.php';
+?>
+
+<!-- Schema.org JSON-LD for Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateListing",
+  "name": "<?php echo htmlspecialchars($property['title']); ?>",
+  "description": "<?php echo htmlspecialchars(strip_tags($property['description'])); ?>",
+  "url": "<?php echo BASE_URL . '/property-details.php?slug=' . ($property['slug'] ?? '') . '&id=' . $property['id']; ?>",
+  "image": "<?php echo htmlspecialchars($page_image); ?>",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "<?php echo htmlspecialchars($property['location']); ?>",
+    "addressRegion": "Haryana",
+    "addressCountry": "IN"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "<?php echo $property['price']; ?>",
+    "priceCurrency": "INR"
+  }
+}
+</script>
+<?php
+// Empty block to hold any future logic before style if needed
 ?>
 
 <style>

@@ -10,10 +10,18 @@ require_once __DIR__ . '/functions.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gurgaon Property Finder</title>
+    <title><?php echo isset($page_title) ? $page_title : 'Gurgaon Property Finder | Verified Real Estate in Gurugram'; ?></title>
+    <meta name="description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'Gurugram\'s only zero-spam real estate platform. Find verified homes with AI-backed legal and investment checks.'; ?>">
     
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo BASE_URL . $_SERVER['REQUEST_URI']; ?>">
+    <meta property="og:title" content="<?php echo isset($page_title) ? $page_title : 'Gurgaon Property Finder'; ?>">
+    <meta property="og:description" content="<?php echo isset($page_description) ? htmlspecialchars($page_description) : 'Verified Real Estate in Gurugram'; ?>">
+    <meta property="og:image" content="<?php echo isset($page_image) ? $page_image : BASE_URL . '/assets/images/og-default.jpg'; ?>">
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="<?php echo BASE_URL; ?>/assets/images/favicon.png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
