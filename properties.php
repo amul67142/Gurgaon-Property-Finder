@@ -31,7 +31,7 @@ if (!empty($_GET['max_price'])) {
 if (isset($_GET['featured']) && $_GET['featured'] == '1') {
     $sql .= " AND is_featured = 1";
 }
-$sql .= " ORDER BY created_at DESC";
+$sql .= " ORDER BY p.sort_order ASC, p.created_at DESC";
 
 try {
     $stmt = $pdo->prepare($sql);

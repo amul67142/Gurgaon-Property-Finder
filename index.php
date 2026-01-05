@@ -253,7 +253,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                  FROM properties p 
                                  LEFT JOIN users u ON p.broker_id = u.id 
                                  WHERE p.is_approved = 1 AND p.is_featured = 1 
-                                 ORDER BY p.created_at DESC LIMIT 6");
+                                 ORDER BY p.sort_order ASC, p.created_at DESC LIMIT 6");
             $featured = $stmt->fetchAll();
 
             if (count($featured) > 0): ?>
@@ -364,7 +364,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                  FROM properties p 
                                  LEFT JOIN users u ON p.broker_id = u.id 
                                  WHERE p.is_approved = 1 AND p.is_featured = 0 
-                                 ORDER BY p.created_at DESC LIMIT 6");
+                                 ORDER BY p.sort_order ASC, p.created_at DESC LIMIT 6");
             $others = $stmt->fetchAll();
             ?>
 

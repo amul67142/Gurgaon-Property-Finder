@@ -25,3 +25,13 @@ MSG:
                     
 ------------------------
 
+--- [2026-01-05 10:58:18] ---
+TO: amul.sharma@realvibe.in
+SUB: Reset Your Password - Gurgaon Property Finder
+MSG: <h2>Password Reset Request</h2>
+                        <p>Hi Admin,</p>
+                        <p>Click the link below to reset your password. This link is valid for 1 hour.</p>
+                        <p><a href='http://localhost/ggn/reset-password.php?token=8144d6173981cf91d0339297950da87367b83819f83d4bb48df8c59168c3f18c&email=amul.sharma@realvibe.in' style='display:inline-block; padding:12px 24px; background:#f59e0b; color:#fff; text-decoration:none; border-radius:8px; font-weight:bold;'>Reset Password</a></p>
+                        <p>If you didn't request this, please ignore this email.</p>
+------------------------
+

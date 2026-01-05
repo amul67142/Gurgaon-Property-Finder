@@ -29,22 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->fetch();
 
             if ($user && password_verify($password, $user['password'])) {
-                // Check if verified
-                if ($user['is_verified'] == 0) {
-                    $error = 'Your account is not verified. <strong>Please check your email</strong> for the verification link.';
-                } else {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['user_role'] = $user['role'];
-                    $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_email'] = $user['email'];
 
-                    if ($user['role'] === 'admin') {
-                        redirect(BASE_URL . '/admin/dashboard.php');
-                    } elseif ($user['role'] === 'broker') {
-                        redirect(BASE_URL . '/broker/dashboard.php');
-                    } else {
-                        redirect(BASE_URL . '/index.php');
-                    }
+                if ($user['role'] === 'admin') {
+                    redirect(BASE_URL . '/admin/dashboard.php');
+                } elseif ($user['role'] === 'broker') {
+                    redirect(BASE_URL . '/broker/dashboard.php');
+                } else {
+                    redirect(BASE_URL . '/index.php');
                 }
             } else {
                 $error = 'Invalid email or password.';

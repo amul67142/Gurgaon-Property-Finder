@@ -2,30 +2,43 @@
 require_once __DIR__ . '/../includes/header.php';
 requireAdmin();
 
-// Handle Approval / Disapproval / Deletion
-if (isset($_POST['action']) && isset($_POST['id'])) {
-    $id = intval($_POST['id']);
-    if ($_POST['action'] === 'approve') {
-        $stmt = $pdo->prepare("UPDATE properties SET is_approved = 1 WHERE id = ?");
-        $stmt->execute([$id]);
-        $success = "Property approved successfully.";
-    } elseif ($_POST['action'] === 'disapprove') {
-        $stmt = $pdo->prepare("UPDATE properties SET is_approved = 0 WHERE id = ?");
-        $stmt->execute([$id]);
-        $success = "Property disapproved successfully.";
-    } elseif ($_POST['action'] === 'toggle_featured') {
-        $stmt = $pdo->prepare("UPDATE properties SET is_featured = NOT is_featured WHERE id = ?");
-        $stmt->execute([$id]);
-        $success = "Featured status updated.";
-    } elseif ($_POST['action'] === 'delete') {
-        // Delete images before deleting the property
-        deletePropertyImages($id, $pdo);
-        
-        $stmt = $pdo->prepare("DELETE FROM properties WHERE id = ?");
-        $stmt->execute([$id]);
-        $success = "Property and associated images deleted successfully.";
+// Handle Approval / Disapproval / Deletion / Reordering
+if (isset($_POST['action'])) {
+    if (isset($_POST['id'])) {
+        $id = intval($_POST['id']);
+        if ($_POST['action'] === 'approve') {
+            $stmt = $pdo->prepare("UPDATE properties SET is_approved = 1 WHERE id = ?");
+            $stmt->execute([$id]);
+            $success = "Property approved successfully.";
+        } elseif ($_POST['action'] === 'disapprove') {
+            $stmt = $pdo->prepare("UPDATE properties SET is_approved = 0 WHERE id = ?");
+            $stmt->execute([$id]);
+            $success = "Property disapproved successfully.";
+        } elseif ($_POST['action'] === 'toggle_featured') {
+            $stmt = $pdo->prepare("UPDATE properties SET is_featured = NOT is_featured WHERE id = ?");
+            $stmt->execute([$id]);
+            $success = "Featured status updated.";
+        } elseif ($_POST['action'] === 'delete') {
+            // Delete images before deleting the property
+            deletePropertyImages($id, $pdo);
+            
+            $stmt = $pdo->prepare("DELETE FROM properties WHERE id = ?");
+            $stmt->execute([$id]);
+            $success = "Property and associated images deleted successfully.";
+        }
+    } elseif ($_POST['action'] === 'update_order' && isset($_POST['sort_order'])) {
+        foreach ($_POST['sort_order'] as $id => $order) {
+            $stmt = $pdo->prepare("UPDATE properties SET sort_order = ? WHERE id = ?");
+            $stmt->execute([intval($order), intval($id)]);
+        }
+        $success = "Display order updated successfully.";
     }
 }
+
+// Ensure database has sort_order column (Dynamic Migration)
+try {
+    $pdo->exec("ALTER TABLE properties ADD COLUMN IF NOT EXISTS sort_order INT DEFAULT 0");
+} catch (PDOException $e) { /* Column might already exist */ }
 
 // Fetch all properties with Broker info
 $sql = "SELECT p.*, u.name as broker_name, u.email as broker_email 
@@ -38,7 +51,7 @@ if (isset($_GET['broker_id']) && !empty($_GET['broker_id'])) {
     $params[] = $_GET['broker_id'];
 }
 
-$sql .= " ORDER BY p.created_at DESC";
+$sql .= " ORDER BY p.sort_order ASC, p.created_at DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
@@ -64,25 +77,35 @@ $properties = $stmt->fetchAll();
             <div class="bg-green-50 text-green-600 p-4 rounded-xl mb-6 border border-green-100 flex items-center gap-3"><i class="fa-solid fa-check-circle"></i> <?php echo $success; ?></div>
         <?php endif; ?>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
-                            <th class="py-4 pl-6 font-semibold">ID</th>
-                            <th class="py-4 px-4 font-semibold">Title</th>
-                            <th class="py-4 px-4 font-semibold">Broker</th>
-                            <th class="py-4 px-4 font-semibold">Price</th>
-                            <th class="py-4 px-4 font-semibold">Status</th>
-                            <th class="py-4 px-4 font-semibold">Featured</th>
-                            <th class="py-4 pr-6 text-right font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm divide-y divide-slate-100">
+        <form method="POST">
+            <input type="hidden" name="action" value="update_order">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Property Inventory</span>
+                    <button type="submit" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-secondary transition shadow-md shadow-slate-900/10">
+                        <i class="fa-solid fa-save mr-1"></i> Update Order
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-100">
+                                <th class="py-4 pl-6 font-semibold">Priority</th>
+                                <th class="py-4 px-4 font-semibold">Title</th>
+                                <th class="py-4 px-4 font-semibold">Broker</th>
+                                <th class="py-4 px-4 font-semibold">Price</th>
+                                <th class="py-4 px-4 font-semibold">Status</th>
+                                <th class="py-4 px-4 font-semibold">Featured</th>
+                                <th class="py-4 pr-6 text-right font-semibold">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100">
                         <?php if (count($properties) > 0): ?>
                             <?php foreach ($properties as $prop): ?>
                                 <tr class="hover:bg-slate-50 transition">
-                                    <td class="py-4 pl-6 text-slate-500">#<?php echo $prop['id']; ?></td>
+                                    <td class="py-4 pl-6 text-slate-500">
+                                        <input type="number" name="sort_order[<?php echo $prop['id']; ?>]" value="<?php echo $prop['sort_order']; ?>" class="w-16 bg-slate-100 border-none rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:ring-2 focus:ring-secondary/50">
+                                    </td>
                                     <td class="py-4 px-4 font-medium text-slate-800"><?php echo htmlspecialchars($prop['title']); ?></td>
                                     <td class="py-4 px-4">
                                         <div class="flex flex-col">
@@ -165,7 +188,8 @@ $properties = $stmt->fetchAll();
                 </table>
             </div>
         </div>
-    </main>
+    </form>
+</main>
 </div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
