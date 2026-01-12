@@ -121,15 +121,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Determine Approval Status (Admins = 1, Brokers = 0)
             $newStatus = 1; // Auto-approve all property edits
 
+            $slug = slugify($title);
+
             // Update Property
             $stmt = $pdo->prepare("UPDATE properties SET 
-                title=?, description=?, price=?, location=?, type=?, status=?, 
+                title=?, slug=?, description=?, price=?, location=?, type=?, status=?, 
                 developer=?, rera_no=?, brochure_url=?, size_range=?, configurations=?, 
                 highlight_points=?, location_advantages=?, map_url=?, video_url=?,
                 is_approved=?, is_featured=?, ad_broker_name=?, ad_broker_type=? 
                 WHERE id=?");
             $stmt->execute([
-                $title, $description, $price, $location, $type, $status,
+                $title, $slug, $description, $price, $location, $type, $status,
                 $developer, $rera_no, $brochure_url, $size_range, $configurations,
                 $highlight_points, $location_advantages, $map_url, $video_url,
                 $newStatus,

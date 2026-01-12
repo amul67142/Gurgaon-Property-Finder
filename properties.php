@@ -20,13 +20,19 @@ if (!empty($_GET['status'])) {
     $sql .= " AND status = ?";
     $params[] = $_GET['status'];
 }
-if (!empty($_GET['min_price'])) {
-    $sql .= " AND price >= ?";
-    $params[] = $_GET['min_price'];
+if (!empty($_GET['bhk'])) {
+    $bhk = intval($_GET['bhk']);
+    $sql .= " AND (configurations LIKE ? OR title LIKE ?)";
+    $params[] = "%$bhk BHK%";
+    $params[] = "%$bhk BHK%";
 }
 if (!empty($_GET['max_price'])) {
     $sql .= " AND price <= ?";
     $params[] = $_GET['max_price'];
+}
+if (!empty($_GET['min_price'])) {
+    $sql .= " AND price >= ?";
+    $params[] = $_GET['min_price'];
 }
 if (isset($_GET['featured']) && $_GET['featured'] == '1') {
     $sql .= " AND is_featured = 1";
@@ -202,14 +208,14 @@ try {
                                                 <?php echo formatPrice($prop['price']); ?>
                                              </p>
                                          </div>
-                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="bg-secondary text-white px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
+                                         <a href="<?php echo BASE_URL; ?>/property/<?php echo ($prop['slug'] ?? $prop['id']); ?>" class="bg-secondary text-white px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-slate-900 transition-all shadow-lg shadow-secondary/20 hover:shadow-slate-900/20 active:scale-95">
                                              Details <i class="fa-solid fa-arrow-right ml-1 text-[10px]"></i>
                                          </a>
                                          <?php else: ?>
                                          <p class="text-slate-900 font-bold text-lg">
                                             <?php echo formatPrice($prop['price']); ?>
                                          </p>
-                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
+                                         <a href="<?php echo BASE_URL; ?>/property/<?php echo ($prop['slug'] ?? $prop['id']); ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                          <?php endif; ?>
                                     </div>
                                     <?php else: ?>
@@ -218,7 +224,7 @@ try {
                                          <p class="text-slate-900 font-bold text-lg">
                                             <?php echo formatPrice($prop['price']); ?>
                                          </p>
-                                         <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
+                                         <a href="<?php echo BASE_URL; ?>/property/<?php echo ($prop['slug'] ?? $prop['id']); ?>" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-secondary transition">View Details</a>
                                     </div>
                                     <?php endif; ?>
                                 </div>

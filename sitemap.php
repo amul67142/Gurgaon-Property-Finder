@@ -30,7 +30,7 @@ while ($row = $stmt->fetch()) {
     $lastMod = date('Y-m-d', strtotime($row['updated_at']));
     
     echo '<url>';
-    echo '<loc>' . BASE_URL . '/property-details.php?slug=' . $slug . '&amp;id=' . $row['id'] . '</loc>';
+    echo '<loc>' . BASE_URL . '/property/' . $slug . '</loc>';
     echo '<lastmod>' . $lastMod . '</lastmod>';
     echo '<changefreq>monthly</changefreq>';
     echo '<priority>0.6</priority>';

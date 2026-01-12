@@ -434,7 +434,7 @@ $banners = $pdo->query("SELECT * FROM ad_banners WHERE is_active = 1 ORDER BY cr
                                                  <p class="text-slate-900 font-bold text-lg">
                                                     <?php echo formatPrice($prop['price']); ?>
                                                  </p>
-                                                 <a href="property-details.php?slug=<?php echo htmlspecialchars($prop['slug'] ?? ''); ?>&id=<?php echo $prop['id']; ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
+                                                 <a href="<?php echo BASE_URL; ?>/property/<?php echo ($prop['slug'] ?? $prop['id']); ?>" class="text-xs font-bold text-slate-600 uppercase tracking-wider hover:text-cyan-600 transition flex items-center gap-1">
                                                      View Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                                  </a>
                                             </div>

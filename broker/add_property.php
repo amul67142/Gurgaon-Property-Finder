@@ -75,15 +75,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['add_amenity'])) {
         try {
             $pdo->beginTransaction();
 
+            $slug = slugify($title);
+
             $stmt = $pdo->prepare("INSERT INTO properties (
-                broker_id, title, description, price, location, type, status, 
+                broker_id, title, slug, description, price, location, type, status, 
                 developer, rera_no, brochure_url, size_range, configurations, 
                 highlight_points, location_advantages, map_url, video_url, is_approved, is_featured,
                 ad_broker_name, ad_broker_type
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             
             $stmt->execute([
-                $_SESSION['user_id'], $title, $description, $price, $location, $type, $status,
+                $_SESSION['user_id'], $title, $slug, $description, $price, $location, $type, $status,
                 $developer, $rera_no, $brochure_url, $size_range, $configurations,
                 $highlight_points, $location_advantages, $map_url, $video_url,
                 $is_approved,

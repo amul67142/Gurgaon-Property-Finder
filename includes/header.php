@@ -86,28 +86,74 @@ $isTransparentPage = basename($_SERVER['PHP_SELF']) == 'index.php' || basename($
         <div id="nav-menu" class="hidden lg:flex items-center space-x-8 font-medium <?php echo $isTransparentPage ? 'text-white' : 'text-slate-900'; ?>">
             <a href="<?php echo BASE_URL; ?>/index.php" class="hover:text-secondary transition">Home</a>
             
-            <!-- Properties Dropdown -->
-            <div class="relative group">
-                <a href="<?php echo BASE_URL; ?>/properties.php" class="flex items-center gap-1 hover:text-secondary transition py-2">
-                    Properties <i class="fa-solid fa-chevron-down text-[10px] mt-0.5 transition-transform group-hover:rotate-180"></i>
-                </a>
-                <div class="absolute left-0 mt-0 w-56 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:mt-2 transition-all duration-300 transform origin-top z-50 overflow-hidden text-slate-800">
-                    <div class="p-2 space-y-1">
-                        <a href="<?php echo BASE_URL; ?>/properties.php" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 hover:text-secondary transition flex items-center gap-3">
-                            <i class="fa-solid fa-layer-group w-5 text-slate-400"></i> All Properties
-                        </a>
-                        <a href="<?php echo BASE_URL; ?>/properties.php?type=apartment" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 hover:text-secondary transition flex items-center gap-3">
-                            <i class="fa-solid fa-building w-5 text-slate-400"></i> Apartments
-                        </a>
-                        <a href="<?php echo BASE_URL; ?>/properties.php?type=house" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 hover:text-secondary transition flex items-center gap-3">
-                            <i class="fa-solid fa-house w-5 text-slate-400"></i> Independent Houses
-                        </a>
-                        <a href="<?php echo BASE_URL; ?>/properties.php?type=plot" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 hover:text-secondary transition flex items-center gap-3">
-                            <i class="fa-solid fa-map-location-dot w-5 text-slate-400"></i> Plots / Land
-                        </a>
-                        <a href="<?php echo BASE_URL; ?>/properties.php?type=commercial" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50 hover:text-secondary transition flex items-center gap-3">
-                            <i class="fa-solid fa-shop w-5 text-slate-400"></i> Commercial
-                        </a>
+            <!-- Properties Mega Menu -->
+            <div class="static group">
+                <button class="flex items-center gap-1 hover:text-secondary transition py-6">
+                    Buy <i class="fa-solid fa-chevron-down text-[10px] mt-0.5 transition-transform group-hover:rotate-180"></i>
+                </button>
+                
+                <!-- Mega Menu Container -->
+                <div class="absolute left-0 top-full w-full bg-white shadow-2xl border-t border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                    <div class="container mx-auto px-6 py-10">
+                        <div class="grid grid-cols-4 gap-8">
+                            
+                            <!-- Column 1: Popular Searches -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 mb-5 border-b border-gray-100 pb-2 uppercase tracking-wider">Popular Searches</h4>
+                                <ul class="space-y-3">
+                                    <li><a href="<?php echo BASE_URL; ?>/properties.php" class="text-gray-500 hover:text-secondary text-sm transition flex items-center gap-2">Property in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/properties-in-gated-community" class="text-gray-500 hover:text-secondary text-sm transition flex items-center gap-2">Gated Community Flats</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/no-brokerage-properties" class="text-gray-500 hover:text-secondary text-sm transition flex items-center gap-2">No Brokerage Flats</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/properties.php?max_price=5000000" class="text-gray-500 hover:text-secondary text-sm transition flex items-center gap-2">Property for Sale Under 50 L</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/2-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition flex items-center gap-2">2 BHK Flats in Gurgaon</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 2: Property Type -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 mb-5 border-b border-gray-100 pb-2 uppercase tracking-wider">Property Type</h4>
+                                <ul class="space-y-3">
+                                    <li><a href="<?php echo BASE_URL; ?>/flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Flats in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/properties.php?type=house" class="text-gray-500 hover:text-secondary text-sm transition">Builder Floor in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/plots-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Plot in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/villas-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Villa in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/houses-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Houses in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/commercial-property-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Shop in Gurgaon</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 3: Status -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 mb-5 border-b border-gray-100 pb-2 uppercase tracking-wider">New Projects</h4>
+                                <ul class="space-y-3">
+                                    <li><a href="<?php echo BASE_URL; ?>/new-projects-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">New Projects in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/ready-to-move-projects-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Ready to Move Projects</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/under-construction-projects-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">Under Construction Projects</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/new-launch-projects-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">New Launch Projects</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 4: By BHK -->
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 mb-5 border-b border-gray-100 pb-2 uppercase tracking-wider">By BHK</h4>
+                                <ul class="space-y-3">
+                                    <li><a href="<?php echo BASE_URL; ?>/1-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">1 BHK Flats in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/2-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">2 BHK Flats in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/3-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">3 BHK Flats in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/4-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">4 BHK Flats in Gurgaon</a></li>
+                                    <li><a href="<?php echo BASE_URL; ?>/5-bhk-flats-in-gurgaon" class="text-gray-500 hover:text-secondary text-sm transition">5 BHK Flats in Gurgaon</a></li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom CTA -->
+                    <div class="bg-gray-50 py-4 px-6 border-t border-gray-100">
+                        <div class="container mx-auto flex justify-between items-center">
+                            <p class="text-xs text-slate-400">Can't find what you are looking for? Contact our experts.</p>
+                            <a href="<?php echo BASE_URL; ?>/contact.php" class="text-secondary font-bold text-xs uppercase tracking-widest hover:underline transition">Get Consultation <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
