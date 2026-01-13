@@ -1,29 +1,60 @@
 RewriteEngine On
 
-# Ensure we are in the correct base directory
-RewriteBase /ggn/
+# ============================================================================
+# ENVIRONMENT-AWARE CONFIGURATION
+# ============================================================================
+# Automatically detects local development (localhost) vs production server
+# Local: Uses /ggn/ base path
+# Production: Uses / (root) base path
+# ============================================================================
 
-# 1. Property Details via Pretty Slug
-# Maps domain.com/property/navi-the-leaf to property-details.php?slug=navi-the-leaf
+# Set RewriteBase for local development only
+RewriteCond %{HTTP_HOST} ^localhost [NC]
+RewriteRule ^(.*)$ - [E=REWRITEBASE:/ggn/]
+
+# Set default base for production (root directory)
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteRule ^(.*)$ - [E=REWRITEBASE:/]
+
+# Apply the appropriate base
+RewriteBase /
+
+# For local development, override with /ggn/
+<If "%{HTTP_HOST} == 'localhost'">
+    RewriteBase /ggn/
+</If>
+
+# ============================================================================
+# 1. PROPERTY DETAILS (Pretty URL Slugs)
+# ============================================================================
+# Maps: /property/navi-the-leaf → property-details.php?slug=navi-the-leaf
 RewriteRule ^property/([^/]+)/?$ property-details.php?slug=$1 [L,QSA]
 
-# 2. Property Type Filters (SEO Friendly)
+# ============================================================================
+# 2. PROPERTY TYPE FILTERS
+# ============================================================================
 RewriteRule ^flats-in-gurgaon/?$ properties.php?type=apartment [L,QSA]
 RewriteRule ^plots-in-gurgaon/?$ properties.php?type=plot [L,QSA]
 RewriteRule ^villas-in-gurgaon/?$ properties.php?type=house [L,QSA]
 RewriteRule ^houses-in-gurgaon/?$ properties.php?type=house [L,QSA]
 RewriteRule ^commercial-property-in-gurgaon/?$ properties.php?type=commercial [L,QSA]
 
-# 3. BHK Filters (SEO Friendly)
-# Maps domain.com/2-bhk-flats-in-gurgaon to properties.php?bhk=2&type=apartment
+# ============================================================================
+# 3. BHK CONFIGURATION FILTERS
+# ============================================================================
+# Maps: /2-bhk-flats-in-gurgaon → properties.php?bhk=2&type=apartment
 RewriteRule ^([1-5])-bhk-flats-in-gurgaon/?$ properties.php?bhk=$1&type=apartment [L,QSA]
 
-# 4. Project Status Filters
+# ============================================================================
+# 4. PROJECT STATUS FILTERS
+# ============================================================================
 RewriteRule ^new-projects-in-gurgaon/?$ properties.php?status=under_construction [L,QSA]
 RewriteRule ^ready-to-move-projects-in-gurgaon/?$ properties.php?status=ready_to_move [L,QSA]
 RewriteRule ^under-construction-projects-in-gurgaon/?$ properties.php?status=under_construction [L,QSA]
 RewriteRule ^new-launch-projects-in-gurgaon/?$ properties.php?status=under_construction [L,QSA]
 
-# 5. Other Special Collections
+# ============================================================================
+# 5. SPECIAL COLLECTIONS & FILTERS
+# ============================================================================
 RewriteRule ^properties-in-gated-community/?$ properties.php?location=Gated+Community [L,QSA]
 RewriteRule ^no-brokerage-properties/?$ properties.php?brokerage=0 [L,QSA]
